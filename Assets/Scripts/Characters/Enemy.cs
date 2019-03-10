@@ -23,6 +23,18 @@ public class Enemy : Character
     }
 
     //////////////
+    public override void TakeDamage(int damage)
+    {
+        int calculatedDamage = damage;
+
+        //
+        // NOTE: сначала обработка входящего дамага, потом базовое применение
+        //
+
+        base.TakeDamage(calculatedDamage);
+    }
+
+    //////////////
     public IEnumerator StartAttacking()
     {
         while (true)

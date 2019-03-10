@@ -20,7 +20,17 @@ public class Character : MonoBehaviour
 
     //////////////
     public virtual void Attack()
-    {
+    { }
 
+    //////////////
+    public virtual void TakeDamage(int damage)
+    {
+        Health -= damage;
+
+        // после применения урона проверяем, не погиб ли персонаж
+        if (Health <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 }
