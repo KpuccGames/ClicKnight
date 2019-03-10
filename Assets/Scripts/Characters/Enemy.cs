@@ -1,10 +1,13 @@
 ﻿using System.Collections;
+using System;
 using UnityEngine;
 
 public class Enemy : Character
 {
     public ElementType EnemyType { get; private set; }
     public float AttackRate { get; private set; }
+
+    public static event Action OnEnemyDeath;
 
     //////////////
     private void Start()
@@ -31,7 +34,16 @@ public class Enemy : Character
         // NOTE: сначала обработка входящего дамага, потом базовое применение
         //
 
-        base.TakeDamage(calculatedDamage);
+        Health -= calculatedDamage;
+
+        // после применения урона проверяем, не погиб ли персонаж
+        if (Health <= 0)
+        {
+            if (OnEnemyDeath != null)
+                OnEnemyDeath();
+
+            Destroy(gameObject);
+        }
     }
 
     //////////////

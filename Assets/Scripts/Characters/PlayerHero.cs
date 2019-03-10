@@ -8,12 +8,22 @@ public class PlayerHero : Character
     private Enemy m_TargetEnemy;
 
     //////////////
+    private void OnEnable()
+    {
+        BattleManager.OnEnemySpawn += TryFindNewEnemy;
+    }
+
+    //////////////
+    private void OnDisable()
+    {
+        BattleManager.OnEnemySpawn -= TryFindNewEnemy;
+    }
+
+    //////////////
     private void Start()
     {
         Strength = 5;
         Health = 20;
-
-        TryFindNewEnemy();
     }
 
     //////////////
@@ -25,7 +35,13 @@ public class PlayerHero : Character
         // NOTE: сначала обработка входящего дамага, потом базовое применение
         //
 
-        base.TakeDamage(calculatedDamage);
+        Health -= calculatedDamage;
+
+        // после применения урона проверяем, не погиб ли персонаж
+        if (Health <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     //////////////
@@ -38,10 +54,7 @@ public class PlayerHero : Character
     //////////////
     private void TryFindNewEnemy()
     {
-        if (m_TargetEnemy != null)
-            return;
-
-        m_TargetEnemy = GameObject.Find("Enemy").GetComponent<Enemy>();
+        m_TargetEnemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
     }
 
 }
