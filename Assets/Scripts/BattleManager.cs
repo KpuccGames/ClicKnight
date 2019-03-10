@@ -3,10 +3,18 @@ using UnityEngine.UI;
 
 public class BattleManager : MonoBehaviour
 {
+    private PlayerHero m_PlayerHero;
+
+    //////////////
+    private void Start()
+    {
+        m_PlayerHero = GameObject.Find("PlayerHero").GetComponent<PlayerHero>();
+    }
+
     //////////////
     public void OnClick()
     {
         // TODO реализация атаки
-        Debug.Log("I'm attacking monster!");
+        m_PlayerHero.Attack();
     }
 }

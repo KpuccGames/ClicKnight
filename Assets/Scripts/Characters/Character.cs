@@ -13,8 +13,14 @@ public enum ElementType
 
 public class Character : MonoBehaviour
 {
-    public int Strength { get; private set; }
-    public int Health { get; private set; }
-    public int Defence { get; private set; }
-    public float CriticalAttackChance { get; private set; }
+    public int Strength { get; protected set; }
+    public int Health { get; protected set; }
+    public int Defence { get; protected set; }
+    public float CriticalAttackChance { get; protected set; }
+
+    //////////////
+    public virtual void Attack()
+    {
+
+    }
 }
