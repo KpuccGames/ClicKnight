@@ -11,12 +11,14 @@ public class PlayerHero : Character
     private void OnEnable()
     {
         BattleManager.OnEnemySpawn += TryFindNewEnemy;
+        Enemy.OnEnemyDeath += OnEnemyKilled;
     }
 
     //////////////
     private void OnDisable()
     {
         BattleManager.OnEnemySpawn -= TryFindNewEnemy;
+        Enemy.OnEnemyDeath -= OnEnemyKilled;
     }
 
     //////////////
@@ -47,14 +49,28 @@ public class PlayerHero : Character
     //////////////
     public override void Attack()
     {
+        if (m_TargetEnemy == null)
+        {
+            TryFindNewEnemy();
+            return;
+        }
+
         Debug.Log("Player apply damage " + Strength);
         m_TargetEnemy.TakeDamage(Strength);
     }
 
     //////////////
-    private void TryFindNewEnemy()
+    private void OnEnemyKilled()
     {
-        m_TargetEnemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
+        m_TargetEnemy = null;
     }
 
+    //////////////
+    private void TryFindNewEnemy()
+    {
+        GameObject go = GameObject.FindGameObjectWithTag("Enemy");
+
+        if (go != null)
+            m_TargetEnemy = go.GetComponent<Enemy>();
+    }
 }

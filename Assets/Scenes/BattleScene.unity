@@ -389,10 +389,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1069446364}
   - component: {fileID: 1069446367}
-  - component: {fileID: 1069446366}
-  - component: {fileID: 1069446365}
   m_Layer: 5
-  m_Name: Enemy
+  m_Name: EnemySpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -417,47 +415,6 @@ RectTransform:
   m_AnchoredPosition: {x: 321, y: 0}
   m_SizeDelta: {x: 237.8, y: 190.3}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1069446365
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1069446363}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48c68e33db8fe9d4fae7ce877f766bf2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1069446366
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1069446363}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
 --- !u!222 &1069446367
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -498,6 +455,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 270ef5c1e8cb05547886987415aa234d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_EnemySpawnPoint: {fileID: 1069446364}
+  m_EnemyPrefab: {fileID: 5099591041947521575, guid: 46af89958c5fb52488f9d6b42b535797,
+    type: 3}
 --- !u!114 &2018717018
 MonoBehaviour:
   m_ObjectHideFlags: 0

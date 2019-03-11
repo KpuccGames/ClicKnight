@@ -42,6 +42,8 @@ public class Enemy : Character
             if (OnEnemyDeath != null)
                 OnEnemyDeath();
 
+            Debug.Log("Enemy is dead");
+
             Destroy(gameObject);
         }
     }
