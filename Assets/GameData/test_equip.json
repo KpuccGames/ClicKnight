@@ -1,0 +1,21 @@
+{"items":[
+	{
+		"name" : "armor",
+		"damage" : 1,
+		"armor" : 1,
+		"icon" : "Art/Icons/TestItems/armor"
+	},
+	{
+		"name" : "axe",
+		"damage" : 22,
+		"armor" : 2,
+		"icon" : "Art/Icons/TestItems/axe"
+	},
+	{
+		"name" : "gloves",
+		"damage" : 2,
+		"armor" : 23,
+		"icon" : "Art/Icons/TestItems/gloves"
+	}
+]
+}
