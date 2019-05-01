@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using SimpleJson;
 
 public enum EquipmentSlot
 {
@@ -13,8 +15,32 @@ public enum EquipmentSlot
     finger = 7
 }
 
-public class EquipmentItem
+public class EquipmentItem : IItem
 {
+    public string Name { get; private set; }
     public int AttackBonus { get; private set; }
     public int DefenseBonus { get; private set; }
+
+    private string m_IconPath;
+
+    /////////////////
+    public EquipmentItem(JsonObject json)
+    {
+        Name = (string)json["name"];
+        AttackBonus = json.GetInt("damage");
+        DefenseBonus = json.GetInt("armor");
+        m_IconPath = (string)json["icon"];
+    }
+
+    /////////////////
+    public Sprite GetIcon()
+    {
+        return Resources.Load<Sprite>(m_IconPath);
+    }
+
+    /////////////////
+    public ItemType GetItemType()
+    {
+        return ItemType.equipment;
+    }
 }

@@ -1,7 +1,5 @@
-﻿using System.IO;
-using System;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using SimpleJson;
 
 public class Inventory : MonoBehaviour
@@ -9,20 +7,27 @@ public class Inventory : MonoBehaviour
     public InventoryCell[] m_InventoryCells;
 
     ////////////////
-    void Start()
+    public void Show()
     {
-        string text = File.ReadAllText("Assets/GameData/test_equip.json");
-        JsonObject json = Helper.ParseJson(text);
+        gameObject.SetActive(true);
 
-        JsonArray array = json.Get<JsonArray>("items");
+        InitView();
+    }
 
-        for (int i = 0; i < array.Count; i++)
+    ////////////////
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+    }
+
+    ////////////////
+    public void InitView()
+    {
+        List<EquipmentItem> items = InventoryContent.Instance.PlayerEquipments;
+
+        for (int i = 0; i < items.Count; i++)
         {
-            JsonObject itemJson = array.GetAt<JsonObject>(i);
-
-            Sprite icon = Resources.Load<Sprite>((string)itemJson["icon"]);
-
-            m_InventoryCells[i].SetItemIcon(icon);
+            m_InventoryCells[i].SetItemIcon(items[i].GetIcon());
         }
     }
 }
