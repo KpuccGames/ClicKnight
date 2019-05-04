@@ -3,32 +3,33 @@ using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
 
-public class GameDataStorage : MonoBehaviour
+public class GameDataStorage
 {
-    public static GameDataStorage Instance { get; private set; }
+    private static GameDataStorage m_Instance;
+    public static GameDataStorage Instance
+    {
+        get
+        {
+            if (m_Instance == null)
+                m_Instance = new GameDataStorage();
+
+            return m_Instance;
+        }
+    }
 
     public bool IsInited { get; private set; }
 
     public List<EquipmentItem> Equipments { get; private set; }
 
     ///////////////
-    void Start()
-    {
-        if (Instance == null)
-            Instance = this;
-
-        DontDestroyOnLoad(Instance);
-
-        Instance.Init();
-    }
-
-    ///////////////
-    private void Init()
+    public void Init()
     {
         string text = File.ReadAllText("Assets/GameData/GameData.json");
         JsonObject json = Helper.ParseJson(text);
 
         // init equipment
+        Equipments = new List<EquipmentItem>();
+
         JsonArray equipments = json.Get<JsonArray>("equipments");
 
         foreach (JsonObject obj in equipments)

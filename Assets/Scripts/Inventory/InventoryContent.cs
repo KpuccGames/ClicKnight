@@ -5,7 +5,17 @@ using System;
 
 public class InventoryContent
 {
-    public static InventoryContent Instance;
+    private static InventoryContent m_Instance;
+    public static InventoryContent Instance
+    {
+        get
+        {
+            if (m_Instance == null)
+                m_Instance = new InventoryContent();
+
+            return m_Instance;
+        }
+    }
 
     public List<EquipmentItem> PlayerEquipments { get; private set; }
 
@@ -22,17 +32,11 @@ public class InventoryContent
     }
 
     /////////////////
-    public void Init()
+    public void Init(JsonObject json)
     {
-        if (Instance == null)
-            Instance = new InventoryContent();
-
-        if (!PlayerPrefs.HasKey("saved_data"))
+        if (json == null)
             return;
 
-        string savedData = PlayerPrefs.GetString("saved_data");
-
-        JsonObject json = Helper.ParseJson(savedData);
         JsonArray equipments = json.Get<JsonArray>("equipments");
 
         foreach (JsonObject obj in equipments)
@@ -81,5 +85,6 @@ public class InventoryContent
 
         // после формирования файла сохраняем
         PlayerPrefs.SetString("saved_data", dataToSave.ToString());
+        PlayerPrefs.Save();
     }
 }
