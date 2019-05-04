@@ -57,8 +57,9 @@ public class MainMenu : MonoBehaviour
     ////////////////
     private void LoadGame(JsonObject json)
     {
-        InventoryContent.Instance.Init(json);
+        GameManager prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameManager>("Assets/Prefabs/GameManager.prefab");
+        GameManager gameManager = Instantiate(prefab);
 
-        SceneManager.LoadScene(SceneName.Home);
+        gameManager.StartGame(json);
     }
 }
