@@ -27,8 +27,6 @@ public class InventoryContent
     public InventoryContent()
     {
         PlayerEquipments = new List<EquipmentItem>();
-
-        OnInventoryContentChanged += SaveInventoryData;
     }
 
     /////////////////
@@ -39,9 +37,10 @@ public class InventoryContent
 
         JsonArray equipments = json.Get<JsonArray>("equipments");
 
-        foreach (JsonObject obj in equipments)
+        for (int i = 0; i < equipments.Count; i++)
         {
-            EquipmentItem item = GameDataStorage.Instance.GetEquipmentByName((string)json["name"]);
+            string obj = (string)equipments[i];
+            EquipmentItem item = GameDataStorage.Instance.GetEquipmentByName(obj);
 
             PlayerEquipments.Add(item);
         }
@@ -55,6 +54,8 @@ public class InventoryContent
         if (item != null)
         {
             PlayerEquipments.Add(item);
+
+            SaveInventoryData();
 
             if (OnInventoryContentChanged != null)
                 OnInventoryContentChanged();
@@ -81,10 +82,9 @@ public class InventoryContent
 
             dataToSave.Add("equipments", equipments);
         }
-
-
+        Debug.Log(dataToSave.ToString());
         // после формирования файла сохраняем
-        PlayerPrefs.SetString("saved_data", dataToSave.ToString());
+        PlayerPrefs.SetString(Constants.SavedGame, dataToSave.ToString());
         PlayerPrefs.Save();
     }
 }

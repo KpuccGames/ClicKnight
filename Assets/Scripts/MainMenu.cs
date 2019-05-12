@@ -49,6 +49,10 @@ public class MainMenu : MonoBehaviour
             return;
 
         string savedData = PlayerPrefs.GetString(Constants.SavedGame);
+
+        if (string.IsNullOrEmpty(savedData))
+            return;
+
         JsonObject json = Helper.ParseJson(savedData);
 
         LoadGame(json);
@@ -57,9 +61,6 @@ public class MainMenu : MonoBehaviour
     ////////////////
     private void LoadGame(JsonObject json)
     {
-        GameManager prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameManager>("Assets/Prefabs/GameManager.prefab");
-        GameManager gameManager = Instantiate(prefab);
-
-        gameManager.StartGame(json);
+        GameManager.Instance.StartGame(json);
     }
 }

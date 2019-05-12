@@ -7,6 +7,18 @@ public class Inventory : MonoBehaviour
     public InventoryCell[] m_InventoryCells;
 
     ////////////////
+    private void OnEnable()
+    {
+        InventoryContent.OnInventoryContentChanged += InitView;
+    }
+
+    ////////////////
+    private void OnDisable()
+    {
+        InventoryContent.OnInventoryContentChanged -= InitView;
+    }
+
+    ////////////////
     public void Show()
     {
         gameObject.SetActive(true);
@@ -29,5 +41,15 @@ public class Inventory : MonoBehaviour
         {
             m_InventoryCells[i].SetItemIcon(items[i].GetIcon());
         }
+    }
+
+    /////////////////
+    public void CheatAddItem()
+    {
+        int index = Random.Range(0, GameDataStorage.Instance.Equipments.Count);
+
+        EquipmentItem item = GameDataStorage.Instance.Equipments[index];
+
+        InventoryContent.Instance.AddItem(item.Name);
     }
 }
