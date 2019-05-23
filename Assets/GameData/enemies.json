@@ -1,0 +1,1 @@
+[{"name":"bandit","prefab":"Prefabs/Enemies/Bandit","attack_type":0,"damage":2},{"name":"water_elemental","prefab":"Prefabs/Enemies/WaterElemental","attack_type":1,"damage":3}]

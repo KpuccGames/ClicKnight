@@ -82,7 +82,7 @@ public class InventoryContent
 
             dataToSave.Add("equipments", equipments);
         }
-        Debug.Log(dataToSave.ToString());
+
         // после формирования файла сохраняем
         PlayerPrefs.SetString(Constants.SavedGame, dataToSave.ToString());
         PlayerPrefs.Save();

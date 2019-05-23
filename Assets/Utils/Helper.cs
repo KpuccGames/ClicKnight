@@ -138,6 +138,15 @@ public static class Helper
         return json;
     }
 
+    /// <summary>
+    /// Парсит json array из строки
+    /// </summary>
+    public static JsonArray ParseJsonArray(string data)
+    {
+        JsonArray json = SimpleJson.SimpleJson.DeserializeObject<JsonArray>(data);
+        return json;
+    }
+
     ///////////////
     private static void StatFormat(StringBuilder sb, string fmt, float value)
     {

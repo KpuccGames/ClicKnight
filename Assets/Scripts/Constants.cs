@@ -10,6 +10,5 @@ public static class Constants
 
 public static class SceneName
 {
-    // PlayerPref keys
     public const string Home = "Home";
 }

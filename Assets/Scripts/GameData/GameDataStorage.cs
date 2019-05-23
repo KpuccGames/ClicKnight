@@ -20,21 +20,61 @@ public class GameDataStorage
     public bool IsInited { get; private set; }
 
     public List<EquipmentItem> Equipments { get; private set; }
+    public List<EnemyData> Enemies { get; private set; }
+    public List<MissionData> Missions { get; private set; }
+    public List<MaterialData> Materials { get; private set; }
 
     ///////////////
     public void Init()
     {
-        string text = File.ReadAllText("Assets/GameData/GameData.json");
-        JsonObject json = Helper.ParseJson(text);
-
-        // init equipment
-        Equipments = new List<EquipmentItem>();
-
-        JsonArray equipments = json.Get<JsonArray>("equipments");
-
-        foreach (JsonObject obj in equipments)
+        GameDataContainer gameDatas = Resources.Load<GameDataContainer>("GameDataContainer");
+        
+        foreach (TextAsset text in gameDatas.m_GameDataFiles)
         {
-            Equipments.Add(new EquipmentItem(obj));
+            JsonArray dataArray = Helper.ParseJsonArray(text.ToString());
+
+            switch (text.name)
+            {
+                case "enemies":
+                    Enemies = new List<EnemyData>();
+
+                    foreach (JsonObject obj in dataArray)
+                    {
+                        Enemies.Add(new EnemyData(obj));
+                    }
+                    break;
+
+                case "equipments":
+                    Equipments = new List<EquipmentItem>();
+
+                    foreach (JsonObject obj in dataArray)
+                    {
+                        Equipments.Add(new EquipmentItem(obj));
+                    }
+                    break;
+
+                case "materials":
+                    Materials = new List<MaterialData>();
+
+                    foreach (JsonObject obj in dataArray)
+                    {
+                        Materials.Add(new MaterialData(obj));
+                    }
+                    break;
+
+                case "missions":
+                    Missions = new List<MissionData>();
+
+                    foreach (JsonObject obj in dataArray)
+                    {
+                        Missions.Add(new MissionData(obj));
+                    }
+                    break;
+
+                default:
+                    Debug.LogError("Wrong storage name");
+                    break;
+            }
         }
 
         // end init
@@ -48,6 +88,18 @@ public class GameDataStorage
         {
             if (item.Name == name)
                 return item;
+        }
+
+        return null;
+    }
+
+    ///////////////
+    public EnemyData GetEnemyByName(string name)
+    {
+        foreach (EnemyData enemy in Enemies)
+        {
+            if (enemy.Name == name)
+                return enemy;
         }
 
         return null;
