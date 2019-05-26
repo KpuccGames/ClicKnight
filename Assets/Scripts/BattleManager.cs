@@ -2,34 +2,77 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
 {
-    private PlayerHero m_PlayerHero;
+    private static BattleManager m_Instance;
+    public static BattleManager Instance { get; private set; }
+
+    public PlayerHero m_PlayerHero;
+
+    public Transform m_EnemySpawnPoint;
+
     private Enemy m_EnemyCharacter;
     private const float m_EnemySpawnDelay = 1f;
 
-    public Transform m_EnemySpawnPoint;
-    public Enemy m_EnemyPrefab;
-
-    public static event Action OnEnemySpawn;
+    private static MissionData m_CurrentMission;
+    private static int m_CurrentStage;
 
     //////////////
     private void OnEnable()
     {
-        Enemy.OnEnemyDeath += SpawnEnemy;
+        Enemy.OnEnemyDeath += TryStartNextWave;
     }
 
     //////////////
     private void OnDisable()
     {
-        Enemy.OnEnemyDeath -= SpawnEnemy;
+        Enemy.OnEnemyDeath -= TryStartNextWave;
+
+        m_CurrentMission = null;
+    }
+
+    //////////////
+    private void Awake()
+    {
+        m_Instance = this;
+    }
+
+    //////////////
+    private void OnDestroy()
+    {
+        m_Instance = null;
     }
 
     //////////////
     private void Start()
     {
-        m_PlayerHero = GameObject.Find("PlayerHero").GetComponent<PlayerHero>();
+        // инициализация персонажа игрока (из PlayerPrefs?)
+        SpawnEnemy();
+    }
+
+    //////////////
+    public static void StartMission(MissionData mission)
+    {
+        m_CurrentMission = mission;
+        m_CurrentStage = 0;
+
+        SceneManager.LoadScene(SceneName.BattleScene);
+    }
+
+    //////////////
+    private void TryStartNextWave()
+    {
+        m_CurrentStage++;
+        Debug.Log("Completed stage " + m_CurrentStage);
+
+        if (CheckBattleOver())
+        {
+            Debug.Log("Mission complete");
+            SceneManager.LoadScene(SceneName.Home);
+            return;
+        }
 
         SpawnEnemy();
     }
@@ -37,6 +80,9 @@ public class BattleManager : MonoBehaviour
     //////////////
     public void OnClick()
     {
+        if (m_EnemyCharacter == null)
+            return;
+
         // TODO реализация атаки
         m_PlayerHero.Attack();
     }
@@ -52,11 +98,22 @@ public class BattleManager : MonoBehaviour
     {
         m_EnemyCharacter = null;
 
+        int random = UnityEngine.Random.Range(0, m_CurrentMission.Enemies.Count);
+        EnemyData enemy = m_CurrentMission.Enemies[random];
+
         yield return new WaitForSecondsRealtime(m_EnemySpawnDelay);
 
-        m_EnemyCharacter = Instantiate(m_EnemyPrefab, m_EnemySpawnPoint);
+        m_EnemyCharacter = Instantiate(enemy.GetPrefab(), m_EnemySpawnPoint).GetComponent<Enemy>();
+        m_EnemyCharacter.SetupEnemy(enemy);
 
-        if (OnEnemySpawn != null)
-            OnEnemySpawn();
+        m_PlayerHero.SetEnemy(m_EnemyCharacter);
+
+        Debug.Log("Spawned " + m_EnemyCharacter.name);
+    }
+
+    //////////////
+    private bool CheckBattleOver()
+    {
+        return m_CurrentStage == m_CurrentMission.Waves;
     }
 }

@@ -2,7 +2,7 @@
 using UnityEngine;
 using SimpleJson;
 
-public class Inventory : MonoBehaviour
+public class Inventory : BaseDialog
 {
     public InventoryCell[] m_InventoryCells;
 
@@ -19,17 +19,11 @@ public class Inventory : MonoBehaviour
     }
 
     ////////////////
-    public void Show()
+    public override void Show()
     {
-        gameObject.SetActive(true);
+        base.Show();
 
         InitView();
-    }
-
-    ////////////////
-    public void Hide()
-    {
-        gameObject.SetActive(false);
     }
 
     ////////////////

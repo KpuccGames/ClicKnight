@@ -2,18 +2,16 @@
 
 public enum ElementType
 {
-    Unknown = -1,
-    Ice = 0,
-    Fire = 1,
-    Air = 2,
-    Earth = 3,
-    Light = 4,
-    Darkness = 5,
+    Common = 0,
+    Ice = 1,
+    Fire = 2,
+    Air = 3,
+    Earth = 4
 }
 
 public class Character : MonoBehaviour
 {
-    public int Strength { get; protected set; }
+    public int AttackPower { get; protected set; }
     public int Health { get; protected set; }
     public int Defence { get; protected set; }
     public float CriticalAttackChance { get; protected set; }

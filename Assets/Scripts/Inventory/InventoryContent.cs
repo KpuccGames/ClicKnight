@@ -55,6 +55,10 @@ public class InventoryContent
         {
             PlayerEquipments.Add(item);
 
+            //
+            // TODO: подумать, надо ли сохранять содержимое, если игрок не прошел уровень
+            // интереснее в конце уровня показать полученный дроп
+            //
             SaveInventoryData();
 
             if (OnInventoryContentChanged != null)

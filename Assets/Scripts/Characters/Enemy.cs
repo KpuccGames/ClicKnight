@@ -5,16 +5,20 @@ using UnityEngine;
 public class Enemy : Character
 {
     public ElementType EnemyType { get; private set; }
-    public float AttackRate { get; private set; }
+
+    private EnemyData m_EnemyData;
 
     public static event Action OnEnemyDeath;
 
     //////////////
-    private void Start()
+    public void SetupEnemy(EnemyData data)
     {
-        Health = 10;
-        Strength = 2;
-        AttackRate = 2f;
+        m_EnemyData = data;
+
+        Health = m_EnemyData.Health;
+        AttackPower = m_EnemyData.Damage;
+        CriticalAttackChance = 0;
+        Defence = 0;
 
         StartCoroutine(StartAttacking());
     }
@@ -22,7 +26,7 @@ public class Enemy : Character
     //////////////
     public override void Attack()
     {
-        Debug.Log("Enemy attacks " + Strength);
+        Debug.Log("Enemy attacks " + AttackPower);
     }
 
     //////////////
@@ -53,7 +57,7 @@ public class Enemy : Character
     {
         while (true)
         {
-            yield return new WaitForSecondsRealtime(AttackRate);
+            yield return new WaitForSecondsRealtime(m_EnemyData.AttackRate);
 
             Attack();
         }

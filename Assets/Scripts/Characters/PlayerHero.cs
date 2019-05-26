@@ -6,25 +6,11 @@ public class PlayerHero : Character
     public ElementType HeroDefenseType { get; private set; }
 
     private Enemy m_TargetEnemy;
-
-    //////////////
-    private void OnEnable()
-    {
-        BattleManager.OnEnemySpawn += TryFindNewEnemy;
-        Enemy.OnEnemyDeath += OnEnemyKilled;
-    }
-
-    //////////////
-    private void OnDisable()
-    {
-        BattleManager.OnEnemySpawn -= TryFindNewEnemy;
-        Enemy.OnEnemyDeath -= OnEnemyKilled;
-    }
-
+    
     //////////////
     private void Start()
     {
-        Strength = 5;
+        AttackPower = 5;
         Health = 20;
     }
 
@@ -49,28 +35,13 @@ public class PlayerHero : Character
     //////////////
     public override void Attack()
     {
-        if (m_TargetEnemy == null)
-        {
-            TryFindNewEnemy();
-            return;
-        }
-
-        Debug.Log("Player apply damage " + Strength);
-        m_TargetEnemy.TakeDamage(Strength);
+        Debug.Log("Player apply damage " + AttackPower);
+        m_TargetEnemy.TakeDamage(AttackPower);
     }
 
     //////////////
-    private void OnEnemyKilled()
+    public void SetEnemy(Enemy enemy)
     {
-        m_TargetEnemy = null;
-    }
-
-    //////////////
-    private void TryFindNewEnemy()
-    {
-        GameObject go = GameObject.FindGameObjectWithTag("Enemy");
-
-        if (go != null)
-            m_TargetEnemy = go.GetComponent<Enemy>();
+        m_TargetEnemy = enemy;
     }
 }

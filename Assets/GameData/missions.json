@@ -1,1 +1,22 @@
-[{"number":1,"enemies":"bandit, water_elemental","waves":5},{"number":2,"enemies":"bandit","waves":3},{"number":3,"enemies":"water_elemental","waves":4}]
+[
+  {
+    "number": 1,
+    "enemies": "bandit,water_elemental",
+    "waves": 7
+  },
+  {
+    "number": 2,
+    "enemies": "bandit",
+    "waves": 5
+  },
+  {
+    "number": 3,
+    "enemies": "water_elemental,air_elemental",
+    "waves": 10
+  },
+  {
+    "number": 4,
+    "enemies": "fire_elemental,earth_elemental",
+    "waves": 20
+  }
+]
