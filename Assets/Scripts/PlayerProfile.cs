@@ -20,7 +20,7 @@ public class PlayerProfile
     public int Health { get; private set; }
     public int BaseDamage { get; private set; }
     public int Armor { get; private set; }
-    public Dictionary<string, EquipmentItem> Equipment { get; private set; }
+    public Dictionary<EquipmentSlot, EquipmentItem> Equipment { get; private set; }
 
     public int NormalWorldMissionNumber { get; private set; }
     public int FireWorldMissionNumber { get; private set; }
@@ -44,10 +44,11 @@ public class PlayerProfile
         EarthWorldMissionNumber = json.GetInt("earth_world_start_mission");
         DarknessWorldMissionNumber = json.GetInt("darkness_world_start_mission");
 
-        Equipment = new Dictionary<string, EquipmentItem>();
+        Equipment = new Dictionary<EquipmentSlot, EquipmentItem>();
 
         string equipName = (string)json["base_weapon"];
-        Equipment.Add(equipName, GameDataStorage.Instance.GetEquipmentByName(equipName));
+        EquipmentItem equip = GameDataStorage.Instance.GetEquipmentByName(equipName);
+        Equipment.Add(equip.Slot, equip);
     }
 
     ///////////////
@@ -68,9 +69,9 @@ public class PlayerProfile
     {
         int armor = Armor;
 
-        foreach (string equipmentName in Equipment)
+        foreach (EquipmentItem equipment in Equipment.Values)
         {
-            armor += GameDataStorage.Instance.GetEquipmentByName(equipmentName).ArmorBonus;
+            armor += equipment.ArmorBonus;
         }
 
         return armor;
