@@ -13,7 +13,7 @@ public class Character : MonoBehaviour
 {
     public int AttackPower { get; protected set; }
     public int Health { get; protected set; }
-    public int Defence { get; protected set; }
+    public int Armor { get; protected set; }
     public float CriticalAttackChance { get; protected set; }
 
     //////////////

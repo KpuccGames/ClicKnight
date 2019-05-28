@@ -19,7 +19,7 @@ public class EquipmentItem : IItem
 {
     public string Name { get; private set; }
     public int AttackBonus { get; private set; }
-    public int DefenseBonus { get; private set; }
+    public int ArmorBonus { get; private set; }
 
     private string m_IconPath;
 
@@ -28,7 +28,7 @@ public class EquipmentItem : IItem
     {
         Name = (string)json["name"];
         AttackBonus = json.GetInt("damage");
-        DefenseBonus = json.GetInt("armor");
+        ArmorBonus = json.GetInt("armor");
         m_IconPath = (string)json["icon"];
     }
 

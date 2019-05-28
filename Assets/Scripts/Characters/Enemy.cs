@@ -18,7 +18,7 @@ public class Enemy : Character
         Health = m_EnemyData.Health;
         AttackPower = m_EnemyData.Damage;
         CriticalAttackChance = 0;
-        Defence = 0;
+        Armor = 0;
 
         StartCoroutine(StartAttacking());
     }
