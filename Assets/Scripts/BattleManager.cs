@@ -36,13 +36,13 @@ public class BattleManager : MonoBehaviour
     //////////////
     private void Awake()
     {
-        m_Instance = this;
+        Instance = this;
     }
 
     //////////////
     private void OnDestroy()
     {
-        m_Instance = null;
+        Instance = null;
     }
 
     //////////////

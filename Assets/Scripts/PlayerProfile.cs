@@ -20,7 +20,7 @@ public class PlayerProfile
     public int Health { get; private set; }
     public int BaseDamage { get; private set; }
     public int Armor { get; private set; }
-    public List<string> Equipment { get; private set; }
+    public Dictionary<string, EquipmentItem> Equipment { get; private set; }
 
     public int NormalWorldMissionNumber { get; private set; }
     public int FireWorldMissionNumber { get; private set; }
@@ -44,7 +44,10 @@ public class PlayerProfile
         EarthWorldMissionNumber = json.GetInt("earth_world_start_mission");
         DarknessWorldMissionNumber = json.GetInt("darkness_world_start_mission");
 
-        Equipment.Add((string)json["base_weapon"]);
+        Equipment = new Dictionary<string, EquipmentItem>();
+
+        string equipName = (string)json["base_weapon"];
+        Equipment.Add(equipName, GameDataStorage.Instance.GetEquipmentByName(equipName));
     }
 
     ///////////////
@@ -52,9 +55,9 @@ public class PlayerProfile
     {
         int damage = BaseDamage;
 
-        foreach (string equipmentName in Equipment)
+        foreach (EquipmentItem equipment in Equipment.Values)
         {
-            damage += GameDataStorage.Instance.GetEquipmentByName(equipmentName).AttackBonus;
+            damage += equipment.AttackBonus;
         }
 
         return damage;
@@ -74,7 +77,7 @@ public class PlayerProfile
     }
 
     ///////////////
-    public void LoadProfile()
+    public void LoadProfile(JsonObject json)
     {
         // загружаем профайл из сохраненных данных
     }

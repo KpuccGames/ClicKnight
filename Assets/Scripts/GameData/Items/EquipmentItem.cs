@@ -5,6 +5,7 @@ using SimpleJson;
 
 public enum EquipmentSlot
 {
+    unknown = -1,
     helmet = 0,
     chest = 1,
     legs = 2,
@@ -12,7 +13,8 @@ public enum EquipmentSlot
     shoulders = 4,
     gloves = 5,
     neck = 6,
-    finger = 7
+    finger = 7,
+    weapon = 8
 }
 
 public class EquipmentItem : IItem
@@ -20,6 +22,7 @@ public class EquipmentItem : IItem
     public string Name { get; private set; }
     public int AttackBonus { get; private set; }
     public int ArmorBonus { get; private set; }
+    public EquipmentSlot Slot { get; private set; }
 
     private string m_IconPath;
 
@@ -30,6 +33,7 @@ public class EquipmentItem : IItem
         AttackBonus = json.GetInt("damage");
         ArmorBonus = json.GetInt("armor");
         m_IconPath = (string)json["icon"];
+        Slot = Helper.ParseEnum((string)json["slot"], EquipmentSlot.unknown);
     }
 
     /////////////////

@@ -23,4 +23,12 @@ public class Character : MonoBehaviour
     //////////////
     public virtual void TakeDamage(int damage)
     { }
+
+    //////////////
+    public int GetDamageMultiplier()
+    {
+        // в аргументах будет атакующий и защищающийся юнит
+
+        return 1;
+    }
 }

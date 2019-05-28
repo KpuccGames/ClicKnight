@@ -1,1 +1,1 @@
-[{"name":"armor","damage":1,"armor":1,"icon":"Art/Icons/TestItems/armor"},{"name":"axe","damage":22,"armor":2,"icon":"Art/Icons/TestItems/axe"},{"name":"gloves","damage":2,"armor":23,"icon":"Art/Icons/TestItems/gloves"}]
+[{"name":"armor","damage":1,"armor":1,"icon":"Art/Icons/TestItems/armor","slot":"chest"},{"name":"axe","damage":2,"armor":2,"icon":"Art/Icons/TestItems/axe","slot":"weapon"},{"name":"gloves","damage":2,"armor":23,"icon":"Art/Icons/TestItems/gloves","slot":"gloves"}]

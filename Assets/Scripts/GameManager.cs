@@ -20,6 +20,7 @@ public class GameManager
     public void StartGame(JsonObject json)
     {
         InventoryContent.Instance.Init(json);
+        PlayerProfile.Instance.LoadProfile(json);
 
         SceneManager.LoadScene(SceneName.Home);
     }

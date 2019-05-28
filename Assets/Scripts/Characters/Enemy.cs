@@ -1,12 +1,17 @@
 ﻿using System.Collections;
 using System;
 using UnityEngine;
+using TMPro;
 
 public class Enemy : Character
 {
+    [Header("Canvas")]
+    public TextMeshProUGUI m_EnemyHealthText;
+
     public ElementType EnemyType { get; private set; }
 
     private EnemyData m_EnemyData;
+    private PlayerHero m_PlayerHero;
 
     public static event Action OnEnemyDeath;
 
@@ -20,12 +25,17 @@ public class Enemy : Character
         CriticalAttackChance = 0;
         Armor = 0;
 
+        m_EnemyHealthText.text = Health.ToString();
+
+        m_PlayerHero = BattleManager.Instance.m_PlayerHero;
+
         StartCoroutine(StartAttacking());
     }
 
     //////////////
     public override void Attack()
     {
+        m_PlayerHero.TakeDamage(AttackPower);
         Debug.Log("Enemy attacks " + AttackPower);
     }
 
@@ -38,7 +48,13 @@ public class Enemy : Character
         // NOTE: сначала обработка входящего дамага, потом базовое применение
         //
 
-        Health -= calculatedDamage;
+        if (calculatedDamage > 0)
+            Health -= calculatedDamage;
+
+        if (Health < 0)
+            Health = 0;
+
+        m_EnemyHealthText.text = Health.ToString();
 
         // после применения урона проверяем, не погиб ли персонаж
         if (Health <= 0)
