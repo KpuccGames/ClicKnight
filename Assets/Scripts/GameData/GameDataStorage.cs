@@ -71,6 +71,10 @@ public class GameDataStorage
                     }
                     break;
 
+                case "base_config":
+                    PlayerProfile.Instance.CreateNewProfile(dataArray);
+                    break;
+
                 default:
                     Debug.LogError("Wrong storage name");
                     break;
