@@ -10,6 +10,7 @@ public static class Constants
 
 public static class SceneName
 {
+    public const string MainMenu = "MainMenu";
     public const string Home = "Home";
     public const string BattleScene = "BattleScene";
 }
