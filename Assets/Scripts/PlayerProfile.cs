@@ -102,10 +102,6 @@ public class PlayerProfile
             if (OnEquipmentChanged != null)
                 OnEquipmentChanged();
 
-            Debug.Log("Health " + Health);
-            Debug.Log("Damage " + GetDamage());
-            Debug.Log("Armor " + GetArmor());
-
             return;
         }
 
@@ -115,10 +111,6 @@ public class PlayerProfile
 
         if (OnEquipmentChanged != null)
             OnEquipmentChanged();
-
-        Debug.Log("Health " + Health);
-        Debug.Log("Damage " + GetDamage());
-        Debug.Log("Armor " + GetArmor());
     }
 
     ///////////////
@@ -132,9 +124,5 @@ public class PlayerProfile
 
         if (OnEquipmentChanged != null)
             OnEquipmentChanged();
-
-        Debug.Log("Health " + Health);
-        Debug.Log("Damage " + GetDamage());
-        Debug.Log("Armor " + GetArmor());
     }
 }

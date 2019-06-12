@@ -81,7 +81,7 @@ public class InventoryContent
             if (item == itemToRemove)
             {
                 PlayerEquipments.Remove(item);
-                Debug.Log("removed " + item.Name);
+
                 SaveInventoryData();
 
                 if (OnInventoryContentChanged != null)
