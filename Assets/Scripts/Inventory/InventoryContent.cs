@@ -52,6 +52,13 @@ public class InventoryContent
         EquipmentItem item = GameDataStorage.Instance.GetEquipmentByName(itemName);
 
         if (item != null)
+            AddItem(item);
+    }
+
+    /////////////////
+    public void AddItem(EquipmentItem item)
+    {
+        if (item != null)
         {
             PlayerEquipments.Add(item);
 
@@ -63,6 +70,25 @@ public class InventoryContent
 
             if (OnInventoryContentChanged != null)
                 OnInventoryContentChanged();
+        }
+    }
+
+    /////////////////
+    public void RemoveItem(EquipmentItem itemToRemove)
+    {
+        foreach (EquipmentItem item in PlayerEquipments)
+        {
+            if (item == itemToRemove)
+            {
+                PlayerEquipments.Remove(item);
+                Debug.Log("removed " + item.Name);
+                SaveInventoryData();
+
+                if (OnInventoryContentChanged != null)
+                    OnInventoryContentChanged();
+
+                return;
+            }
         }
     }
 

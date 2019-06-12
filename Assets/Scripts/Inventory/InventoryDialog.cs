@@ -2,9 +2,10 @@
 using UnityEngine;
 using SimpleJson;
 
-public class Inventory : BaseDialog
+public class InventoryDialog : BaseDialog
 {
     public InventoryCell[] m_InventoryCells;
+    public HeroEquipmentView m_EquipmentView;
 
     ////////////////
     private void OnEnable()
@@ -24,6 +25,8 @@ public class Inventory : BaseDialog
         base.Show();
 
         InitView();
+
+        m_EquipmentView.UpdateEquipmentView();
     }
 
     ////////////////
@@ -31,9 +34,16 @@ public class Inventory : BaseDialog
     {
         List<EquipmentItem> items = InventoryContent.Instance.PlayerEquipments;
 
-        for (int i = 0; i < items.Count; i++)
+        for (int i = 0; i < m_InventoryCells.Length; i++)
         {
-            m_InventoryCells[i].SetItemIcon(items[i].GetIcon());
+            if (i >= items.Count)
+            {
+                m_InventoryCells[i].SetItem(null);
+
+                continue;
+            }
+
+            m_InventoryCells[i].SetItem(items[i]);
         }
     }
 

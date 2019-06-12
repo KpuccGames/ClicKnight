@@ -13,7 +13,7 @@ public enum EquipmentSlot
     shoulders = 4,
     gloves = 5,
     neck = 6,
-    finger = 7,
+    shield = 7,
     weapon = 8
 }
 
