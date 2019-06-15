@@ -23,12 +23,14 @@ public class BattleManager : MonoBehaviour
     private void OnEnable()
     {
         Enemy.OnEnemyDeath += TryStartNextWave;
+        m_PlayerHero.OnPlayerDied += OnPlayerDied;
     }
 
     //////////////
     private void OnDisable()
     {
         Enemy.OnEnemyDeath -= TryStartNextWave;
+        m_PlayerHero.OnPlayerDied -= OnPlayerDied;
 
         m_CurrentMission = null;
     }
@@ -50,6 +52,14 @@ public class BattleManager : MonoBehaviour
     {
         // инициализация персонажа игрока (из PlayerPrefs?)
         SpawnEnemy();
+    }
+
+    //////////////
+    private void OnPlayerDied()
+    {
+        Debug.Log("You lost.");
+
+        SceneManager.LoadScene(SceneName.Home);
     }
 
     //////////////

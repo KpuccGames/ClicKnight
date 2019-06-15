@@ -36,7 +36,6 @@ public class Enemy : Character
     public override void Attack()
     {
         m_PlayerHero.TakeDamage(AttackPower);
-        Debug.Log("Enemy attacks " + AttackPower);
     }
 
     //////////////

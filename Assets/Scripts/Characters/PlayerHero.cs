@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
+using System;
 using TMPro;
 
 public class PlayerHero : Character
@@ -11,6 +11,8 @@ public class PlayerHero : Character
     public ElementType HeroDefenseType { get; private set; }
 
     private Enemy m_TargetEnemy;
+
+    public event Action OnPlayerDied;
     
     //////////////
     private void Start()
@@ -28,6 +30,8 @@ public class PlayerHero : Character
     {
         int calculatedDamage = damage - Armor;
 
+        Debug.Log("Enemy attacks " + calculatedDamage);
+
         //
         // NOTE: сначала обработка входящего дамага, потом базовое применение
         //
@@ -44,6 +48,9 @@ public class PlayerHero : Character
         if (Health <= 0)
         {
             Destroy(gameObject);
+
+            if (OnPlayerDied != null)
+                OnPlayerDied();
         }
     }
 
