@@ -76,8 +76,8 @@ public class BattleManager : MonoBehaviour
     //////////////
     private void TryStartNextWave()
     {
-        m_CurrentStage++;
         Debug.Log("Completed stage " + m_CurrentStage);
+        m_CurrentStage++;
 
         if (CheckBattleOver())
         {

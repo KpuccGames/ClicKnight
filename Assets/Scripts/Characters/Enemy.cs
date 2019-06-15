@@ -58,7 +58,7 @@ public class Enemy : Character
         // после применения урона проверяем, не погиб ли персонаж
         if (Health <= 0)
         {
-            Debug.Log("Enemy is dead");
+            Debug.Log(m_EnemyData.Name + " is dead");
 
             if (OnEnemyDeath != null)
                 OnEnemyDeath();

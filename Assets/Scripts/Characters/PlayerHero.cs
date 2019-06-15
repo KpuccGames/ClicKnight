@@ -57,7 +57,6 @@ public class PlayerHero : Character
     //////////////
     public override void Attack()
     {
-        Debug.Log("Player apply damage " + AttackPower);
         m_TargetEnemy.TakeDamage(AttackPower);
     }
 
