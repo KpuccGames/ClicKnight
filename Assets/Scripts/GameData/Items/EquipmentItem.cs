@@ -12,9 +12,8 @@ public enum EquipmentSlot
     boots = 3,
     shoulders = 4,
     gloves = 5,
-    neck = 6,
-    shield = 7,
-    weapon = 8
+    shield = 6,
+    weapon = 7
 }
 
 public class EquipmentItem : IItem

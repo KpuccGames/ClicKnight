@@ -1,7 +1,6 @@
-﻿using System;
+﻿using TMPro;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class BattleManager : MonoBehaviour
@@ -12,6 +11,7 @@ public class BattleManager : MonoBehaviour
     public PlayerHero m_PlayerHero;
 
     public Transform m_EnemySpawnPoint;
+    public TextMeshProUGUI m_StageCountertext;
 
     private Enemy m_EnemyCharacter;
     private const float m_EnemySpawnDelay = 1f;
@@ -52,6 +52,8 @@ public class BattleManager : MonoBehaviour
     {
         // инициализация персонажа игрока (из PlayerPrefs?)
         SpawnEnemy();
+
+        RefreshStageCounter();
     }
 
     //////////////
@@ -66,7 +68,7 @@ public class BattleManager : MonoBehaviour
     public static void StartMission(MissionData mission)
     {
         m_CurrentMission = mission;
-        m_CurrentStage = 0;
+        m_CurrentStage = 1;
 
         SceneManager.LoadScene(SceneName.BattleScene);
     }
@@ -84,7 +86,14 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
+        RefreshStageCounter();
         SpawnEnemy();
+    }
+
+    //////////////
+    private void RefreshStageCounter()
+    {
+        m_StageCountertext.text = m_CurrentStage + " / " + m_CurrentMission.Waves;
     }
 
     //////////////
@@ -124,6 +133,6 @@ public class BattleManager : MonoBehaviour
     //////////////
     private bool CheckBattleOver()
     {
-        return m_CurrentStage == m_CurrentMission.Waves;
+        return m_CurrentStage > m_CurrentMission.Waves;
     }
 }
