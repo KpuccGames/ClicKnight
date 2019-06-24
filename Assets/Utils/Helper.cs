@@ -185,4 +185,12 @@ public static class Helper
 
         return sum;
     }
+
+    ////////////////
+    public static bool CheckDropEvent(float dropChance)
+    {
+        float randomDigit = UnityEngine.Random.Range(0, 100);
+
+        return randomDigit <= dropChance;
+    }
 }

@@ -108,4 +108,16 @@ public class GameDataStorage
 
         return null;
     }
+
+    ///////////////
+    public MaterialData GetMaterialByName(string name)
+    {
+        foreach (MaterialData material in Materials)
+        {
+            if (material.Name == name)
+                return material;
+        }
+
+        return null;
+    }
 }

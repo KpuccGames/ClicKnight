@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -74,8 +75,32 @@ public class BattleManager : MonoBehaviour
     }
 
     //////////////
-    private void TryStartNextWave()
+    private void TryStartNextWave(EnemyData enemyData)
     {
+        // дропаем предмет игроку
+        MaterialData droppedItem = null;
+
+        foreach (MaterialData drop in enemyData.Drops)
+        {
+            if (Helper.CheckDropEvent(drop.DropChance))
+            {
+                if (droppedItem == null)
+                {
+                    droppedItem = drop;
+                }
+                else if (droppedItem.DropChance > drop.DropChance)
+                {
+                    droppedItem = drop;
+                }
+            }
+        }
+
+        if (droppedItem != null)
+        {
+            InventoryContent.Instance.AddMaterial(droppedItem);
+            Debug.Log("Dropped item " + droppedItem.Name);
+        }
+
         Debug.Log("Completed stage " + m_CurrentStage);
         m_CurrentStage++;
 

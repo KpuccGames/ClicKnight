@@ -13,7 +13,7 @@ public class Enemy : Character
     private EnemyData m_EnemyData;
     private PlayerHero m_PlayerHero;
 
-    public static event Action OnEnemyDeath;
+    public static event Action<EnemyData> OnEnemyDeath;
 
     //////////////
     public void SetupEnemy(EnemyData data)
@@ -61,7 +61,7 @@ public class Enemy : Character
             Debug.Log(m_EnemyData.Name + " is dead");
 
             if (OnEnemyDeath != null)
-                OnEnemyDeath();
+                OnEnemyDeath(m_EnemyData);
 
             Destroy(gameObject);
         }

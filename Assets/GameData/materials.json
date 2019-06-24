@@ -1,1 +1,1 @@
-[{"name":"apple","icon":"Art/icons/TestItems/apple"},{"name":"gem","icon":"Art/icons/TestItems/gem"}]
+[{"name":"apple","icon":"Art/icons/TestItems/apple","drop_chance":30},{"name":"gem","icon":"Art/icons/TestItems/gem","drop_chance":20}]

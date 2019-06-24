@@ -18,6 +18,7 @@ public class InventoryContent
     }
 
     public List<EquipmentItem> PlayerEquipments { get; private set; }
+    public List<MaterialData> PlayerMaterials { get; private set; } // возможно удобнее переделать в Dictionary <MaterialData, int> для количества предметов
 
     public bool IsInited { get; private set; }
 
@@ -27,6 +28,7 @@ public class InventoryContent
     public InventoryContent()
     {
         PlayerEquipments = new List<EquipmentItem>();
+        PlayerMaterials = new List<MaterialData>();
     }
 
     /////////////////
@@ -47,16 +49,25 @@ public class InventoryContent
     }
 
     /////////////////
-    public void AddItem(string itemName)
+    public void AddMaterial(MaterialData material)
+    {
+        if (material == null)
+            return;
+
+        PlayerMaterials.Add(material);
+    }
+
+    /////////////////
+    public void AddEquipmentItem(string itemName)
     {
         EquipmentItem item = GameDataStorage.Instance.GetEquipmentByName(itemName);
 
         if (item != null)
-            AddItem(item);
+            AddEquipmentItem(item);
     }
 
     /////////////////
-    public void AddItem(EquipmentItem item)
+    public void AddEquipmentItem(EquipmentItem item)
     {
         if (item != null)
         {

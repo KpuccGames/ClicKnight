@@ -1,5 +1,6 @@
 ﻿using SimpleJson;
 using UnityEngine;
+using System.Collections.Generic;
 
 public enum AttackType
 {
@@ -15,6 +16,7 @@ public class EnemyData
     public int Damage { get; private set; }
     public int Health { get; private set; }
     public float AttackRate { get; private set; }
+    public List<MaterialData> Drops { get; private set; }
 
     ///////////////
     public EnemyData(JsonObject json)
@@ -25,6 +27,14 @@ public class EnemyData
         Damage = json.GetInt("damage");
         Health = json.GetInt("health");
         AttackRate = json.GetFloat("attack_rate");
+
+        Drops = new List<MaterialData>();
+        string[] dropList = json.GetString("drops", string.Empty).Split(',');
+
+        foreach (string dropItem in dropList)
+        {
+            Drops.Add(GameDataStorage.Instance.GetMaterialByName(dropItem));
+        }
     }
 
     ///////////////

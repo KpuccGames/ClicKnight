@@ -9,6 +9,7 @@ public class InventoryCell : MonoBehaviour, IPointerClickHandler
     public Image m_Icon;
 
     private EquipmentItem m_EquipmentItem;
+    private MaterialData m_MaterialItem;
 
     //////////////
     public void OnPointerClick(PointerEventData eventData)
@@ -22,7 +23,7 @@ public class InventoryCell : MonoBehaviour, IPointerClickHandler
     }
 
     //////////////
-    public void SetItem(EquipmentItem item)
+    public void SetItem(IItem item)
     {
         if (item == null)
         {
@@ -30,9 +31,20 @@ public class InventoryCell : MonoBehaviour, IPointerClickHandler
             return;
         }
 
-        m_EquipmentItem = item;
+        ItemType type = item.GetItemType();
 
-        SetItemIcon(item.GetIcon());
+        if (type == ItemType.equipment)
+        {
+            m_EquipmentItem = (EquipmentItem)item;
+
+            SetItemIcon(m_EquipmentItem.GetIcon());
+        }
+        else if (type == ItemType.material)
+        {
+            m_MaterialItem = (MaterialData)item;
+
+            SetItemIcon(m_MaterialItem.GetIcon());
+        }
     }
 
     //////////////

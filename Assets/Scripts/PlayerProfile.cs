@@ -105,7 +105,7 @@ public class PlayerProfile
             return;
         }
 
-        InventoryContent.Instance.AddItem(equippedItem);
+        InventoryContent.Instance.AddEquipmentItem(equippedItem);
         InventoryContent.Instance.RemoveItem(item);
         HeroEquipment[item.Slot] = item;
 
@@ -120,7 +120,7 @@ public class PlayerProfile
             return;
 
         HeroEquipment.Remove(item.Slot);
-        InventoryContent.Instance.AddItem(item);
+        InventoryContent.Instance.AddEquipmentItem(item);
 
         if (OnEquipmentChanged != null)
             OnEquipmentChanged();
