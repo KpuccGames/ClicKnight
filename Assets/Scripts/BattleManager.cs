@@ -1,4 +1,5 @@
 ﻿using TMPro;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,8 @@ public class BattleManager : MonoBehaviour
 
     private static MissionData m_CurrentMission;
     private static int m_CurrentStage;
+
+    public static event Action<MissionData> OnMissionComplete;
 
     //////////////
     private void OnEnable()
@@ -107,6 +110,10 @@ public class BattleManager : MonoBehaviour
         if (CheckBattleOver())
         {
             Debug.Log("Mission complete");
+
+            if (OnMissionComplete != null)
+                OnMissionComplete(m_CurrentMission);
+
             SceneManager.LoadScene(SceneName.Home);
             return;
         }

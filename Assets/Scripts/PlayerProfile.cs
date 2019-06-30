@@ -39,18 +39,21 @@ public class PlayerProfile
         Health = json.GetInt("health");
         BaseDamage = json.GetInt("damage");
         Armor = json.GetInt("armor");
-        NormalWorldMissionNumber = json.GetInt("normal_world_start_mission");
-        FireWorldMissionNumber = json.GetInt("fire_world_start_mission");
-        WaterWorldMissionNumber = json.GetInt("water_world_start_mission");
-        AirWorldMissionNumber = json.GetInt("air_world_start_mission");
-        EarthWorldMissionNumber = json.GetInt("earth_world_start_mission");
-        DarknessWorldMissionNumber = json.GetInt("darkness_world_start_mission");
+        NormalWorldMissionNumber = json.GetInt(Constants.NormalWorldMissionNumber);
+        FireWorldMissionNumber = json.GetInt(Constants.FireWorldMissionNumber);
+        WaterWorldMissionNumber = json.GetInt(Constants.WaterWorldMissionNumber);
+        AirWorldMissionNumber = json.GetInt(Constants.AirWorldMissionNumber);
+        EarthWorldMissionNumber = json.GetInt(Constants.EarthWorldMissionNumber);
+        DarknessWorldMissionNumber = json.GetInt(Constants.DarknessWorldMissionNumber);
 
         HeroEquipment = new Dictionary<EquipmentSlot, EquipmentItem>();
 
         string equipName = (string)json["base_weapon"];
         EquipmentItem equip = GameDataStorage.Instance.GetEquipmentByName(equipName);
         HeroEquipment.Add(equip.Slot, equip);
+
+        // подписка на ивент обновления прогресса
+        BattleManager.OnMissionComplete += TryUpdateProgress;
     }
 
     ///////////////
@@ -124,5 +127,17 @@ public class PlayerProfile
 
         if (OnEquipmentChanged != null)
             OnEquipmentChanged();
+    }
+
+    ///////////////
+    private void TryUpdateProgress(MissionData completedMission)
+    {
+        switch (completedMission.World)
+        {
+            case MissionWorld.Normal:
+                if (completedMission.Number == NormalWorldMissionNumber)
+                    NormalWorldMissionNumber++;
+                break;
+        }
     }
 }
