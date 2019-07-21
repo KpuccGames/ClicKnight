@@ -36,9 +36,7 @@ public class PlayerProfile
     {
         JsonObject json = data.GetAt<JsonObject>(0);
 
-        Health = json.GetInt("health");
-        BaseDamage = json.GetInt("damage");
-        Armor = json.GetInt("armor");
+        InitBaseStats(data);
         NormalWorldMissionNumber = json.GetInt(Constants.NormalWorldMissionNumber);
         FireWorldMissionNumber = json.GetInt(Constants.FireWorldMissionNumber);
         WaterWorldMissionNumber = json.GetInt(Constants.WaterWorldMissionNumber);
@@ -51,9 +49,6 @@ public class PlayerProfile
         string equipName = (string)json["base_weapon"];
         EquipmentItem equip = GameDataStorage.Instance.GetEquipmentByName(equipName);
         HeroEquipment.Add(equip.Slot, equip);
-
-        // подписка на ивент обновления прогресса
-        BattleManager.OnMissionComplete += TryUpdateProgress;
     }
 
     ///////////////
@@ -80,12 +75,6 @@ public class PlayerProfile
         }
 
         return armor;
-    }
-
-    ///////////////
-    public void LoadProfile(JsonObject json)
-    {
-        // загружаем профайл из сохраненных данных
     }
 
     ///////////////
@@ -139,5 +128,73 @@ public class PlayerProfile
                     NormalWorldMissionNumber++;
                 break;
         }
+
+        GameManager.Instance.SaveGame();
+    }
+
+    //Utils//
+
+    ///////////////
+    public void LoadProfile(JsonObject json)
+    {
+        InitBaseStats(GameDataStorage.Instance.NewProfileData);
+        HeroEquipment = new Dictionary<EquipmentSlot, EquipmentItem>();
+
+        // загружаем данные сохраненного профиля
+
+        JsonArray heroEquipments = json.Get<JsonArray>("hero_equipment");
+
+        foreach (JsonObject obj in heroEquipments)
+        {
+            EquipmentItem item = GameDataStorage.Instance.GetEquipmentByName(obj.GetString("Name", string.Empty));
+
+            HeroEquipment.Add((EquipmentSlot)obj.GetInt("Slot"), item);
+        }
+
+        NormalWorldMissionNumber = json.GetInt("Normal");
+        WaterWorldMissionNumber = json.GetInt("Water");
+        FireWorldMissionNumber = json.GetInt("Fire");
+        EarthWorldMissionNumber = json.GetInt("Earth");
+        DarknessWorldMissionNumber = json.GetInt("Darkness");
+        AirWorldMissionNumber = json.GetInt("Air");
+    }
+
+    ///////////////
+    public JsonObject SaveProfile()
+    {
+        JsonObject profileDataToSave = new JsonObject();
+
+        // сохраняем снаряжение персонажа
+        JsonArray heroEquipmentArray = new JsonArray();
+
+        foreach (KeyValuePair<EquipmentSlot, EquipmentItem> pair in HeroEquipment)
+        {
+            heroEquipmentArray.Add(pair.Value);
+        }
+
+        profileDataToSave.Add("hero_equipment", heroEquipmentArray);
+        
+        // сохраняем прогресс игрока
+        profileDataToSave.Add("Normal", NormalWorldMissionNumber);
+        profileDataToSave.Add("Water", WaterWorldMissionNumber);
+        profileDataToSave.Add("Fire", FireWorldMissionNumber);
+        profileDataToSave.Add("Earth", EarthWorldMissionNumber);
+        profileDataToSave.Add("Darkness", DarknessWorldMissionNumber);
+        profileDataToSave.Add("Air", AirWorldMissionNumber);
+
+        return profileDataToSave;
+    }
+
+    ///////////////
+    private void InitBaseStats(JsonArray data)
+    {
+        JsonObject json = data.GetAt<JsonObject>(0);
+
+        Health = json.GetInt("health");
+        BaseDamage = json.GetInt("damage");
+        Armor = json.GetInt("armor");
+
+        // подписка на ивент обновления прогресса
+        BattleManager.OnMissionComplete += TryUpdateProgress;
     }
 }

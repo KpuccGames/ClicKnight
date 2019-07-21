@@ -46,6 +46,13 @@ public class InventoryContent
 
             PlayerEquipments.Add(item);
         }
+
+        JsonArray materials = json.Get<JsonArray>("materials");
+
+        foreach (string item in materials)
+        {
+            PlayerMaterials.Add(GameDataStorage.Instance.GetMaterialByName(item));
+        }
     }
 
     /////////////////
@@ -55,6 +62,9 @@ public class InventoryContent
             return;
 
         PlayerMaterials.Add(material);
+
+        if (OnInventoryContentChanged != null)
+            OnInventoryContentChanged();
     }
 
     /////////////////
@@ -77,7 +87,6 @@ public class InventoryContent
             // TODO: подумать, надо ли сохранять содержимое, если игрок не прошел уровень
             // интереснее в конце уровня показать полученный дроп
             //
-            SaveInventoryData();
 
             if (OnInventoryContentChanged != null)
                 OnInventoryContentChanged();
@@ -93,39 +102,11 @@ public class InventoryContent
             {
                 PlayerEquipments.Remove(item);
 
-                SaveInventoryData();
-
                 if (OnInventoryContentChanged != null)
                     OnInventoryContentChanged();
 
                 return;
             }
         }
-    }
-
-    /////////////////
-    private void SaveInventoryData()
-    {
-        //
-        // TODO: сохранять данные инвентаря при изменении содержимого
-        //
-
-        JsonObject dataToSave = new JsonObject();
-
-        if (PlayerEquipments.Count > 0)
-        {
-            JsonArray equipments = new JsonArray();
-
-            foreach (EquipmentItem item in PlayerEquipments)
-            {
-                equipments.Add(item.Name);
-            }
-
-            dataToSave.Add("equipments", equipments);
-        }
-
-        // после формирования файла сохраняем
-        PlayerPrefs.SetString(Constants.SavedGame, dataToSave.ToString());
-        PlayerPrefs.Save();
     }
 }

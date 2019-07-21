@@ -13,7 +13,8 @@ public enum EquipmentSlot
     shoulders = 4,
     gloves = 5,
     shield = 6,
-    weapon = 7
+    weapon = 7,
+    count = 8
 }
 
 public class EquipmentItem : IItem

@@ -24,6 +24,8 @@ public class GameDataStorage
     public List<MissionData> Missions { get; private set; }
     public List<MaterialData> Materials { get; private set; }
 
+    public JsonArray NewProfileData { get; private set; }
+
     ///////////////
     public void Init()
     {
@@ -72,7 +74,7 @@ public class GameDataStorage
                     break;
 
                 case "base_config":
-                    PlayerProfile.Instance.CreateNewProfile(dataArray);
+                    NewProfileData = dataArray;
                     break;
 
                 default:
