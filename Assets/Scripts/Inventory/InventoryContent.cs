@@ -18,7 +18,7 @@ public class InventoryContent
     }
 
     public List<EquipmentItem> PlayerEquipments { get; private set; }
-    public List<MaterialData> PlayerMaterials { get; private set; } // возможно удобнее переделать в Dictionary <MaterialData, int> для количества предметов
+    public List<MaterialInfo> PlayerMaterials { get; private set; }
 
     public bool IsInited { get; private set; }
 
@@ -28,7 +28,7 @@ public class InventoryContent
     public InventoryContent()
     {
         PlayerEquipments = new List<EquipmentItem>();
-        PlayerMaterials = new List<MaterialData>();
+        PlayerMaterials = new List<MaterialInfo>();
     }
 
     /////////////////
@@ -49,9 +49,12 @@ public class InventoryContent
 
         JsonArray materials = json.Get<JsonArray>("materials");
 
-        foreach (string item in materials)
+        foreach (JsonObject item in materials)
         {
-            PlayerMaterials.Add(GameDataStorage.Instance.GetMaterialByName(item));
+            MaterialData data = GameDataStorage.Instance.GetMaterialByName((string)item["name"]);
+            int amount = item.GetInt("amount");
+
+            PlayerMaterials.Add(new MaterialInfo(data, amount));
         }
     }
 
@@ -61,7 +64,20 @@ public class InventoryContent
         if (material == null)
             return;
 
-        PlayerMaterials.Add(material);
+        bool isNewMaterial = true;
+
+        foreach (MaterialInfo materialInfo in PlayerMaterials)
+        {
+            if (materialInfo.Data.Name == material.Name)
+            {
+                materialInfo.AddMaterial(1);
+                isNewMaterial = false;
+                break;
+            }
+        }
+
+        if (isNewMaterial)
+            PlayerMaterials.Add(new MaterialInfo(material, 1));
 
         if (OnInventoryContentChanged != null)
             OnInventoryContentChanged();

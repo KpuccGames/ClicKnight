@@ -46,7 +46,7 @@ public class InventoryDialog : BaseDialog
             m_InventoryCells[i].SetItem(items[i]);
         }
 
-        List<MaterialData> materials = InventoryContent.Instance.PlayerMaterials;
+        List<MaterialInfo> materials = InventoryContent.Instance.PlayerMaterials;
 
         for (int j = 0; j < (m_InventoryCells.Length - items.Count); j++)
         {
