@@ -22,7 +22,7 @@ public class InventoryContent
 
     public bool IsInited { get; private set; }
 
-    public static event Action OnInventoryContentChanged;
+    public static event Action<IItem> OnInventoryContentChanged;
 
     /////////////////
     public InventoryContent()
@@ -64,23 +64,26 @@ public class InventoryContent
         if (material == null)
             return;
 
-        bool isNewMaterial = true;
+        MaterialInfo materialToAdd = null;
 
         foreach (MaterialInfo materialInfo in PlayerMaterials)
         {
             if (materialInfo.Data.Name == material.Name)
             {
                 materialInfo.AddMaterial(1);
-                isNewMaterial = false;
+                materialToAdd = materialInfo;
                 break;
             }
         }
 
-        if (isNewMaterial)
-            PlayerMaterials.Add(new MaterialInfo(material, 1));
+        if (materialToAdd == null)
+        {
+            materialToAdd = new MaterialInfo(material, 1);
+            PlayerMaterials.Add(materialToAdd);
+        }
 
         if (OnInventoryContentChanged != null)
-            OnInventoryContentChanged();
+            OnInventoryContentChanged(materialToAdd);
     }
 
     /////////////////
@@ -105,7 +108,7 @@ public class InventoryContent
             //
 
             if (OnInventoryContentChanged != null)
-                OnInventoryContentChanged();
+                OnInventoryContentChanged(item);
         }
     }
 
@@ -119,7 +122,7 @@ public class InventoryContent
                 PlayerEquipments.Remove(item);
 
                 if (OnInventoryContentChanged != null)
-                    OnInventoryContentChanged();
+                    OnInventoryContentChanged(itemToRemove);
 
                 return;
             }

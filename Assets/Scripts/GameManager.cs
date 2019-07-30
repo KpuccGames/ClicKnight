@@ -36,8 +36,7 @@ public class GameManager
         }
         
         SceneManager.LoadScene(SceneName.Home);
-
-        InventoryContent.OnInventoryContentChanged += SaveGame;
+        
         PlayerProfile.OnEquipmentChanged += SaveGame;
     }
 

@@ -7,12 +7,6 @@ public class BaseDialog : MonoBehaviour
     //////////////////
     public virtual void Show()
     {
-        if (gameObject.activeSelf)
-        {
-            gameObject.SetActive(false);
-            return;
-        }
-
         gameObject.SetActive(true);
     }
 
