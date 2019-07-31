@@ -18,17 +18,17 @@ public class InventoryContent
     }
 
     public List<EquipmentItem> PlayerEquipments { get; private set; }
-    public List<MaterialData> PlayerMaterials { get; private set; } // возможно удобнее переделать в Dictionary <MaterialData, int> для количества предметов
+    public List<MaterialInfo> PlayerMaterials { get; private set; }
 
     public bool IsInited { get; private set; }
 
-    public static event Action OnInventoryContentChanged;
+    public static event Action<IItem> OnInventoryContentChanged;
 
     /////////////////
     public InventoryContent()
     {
         PlayerEquipments = new List<EquipmentItem>();
-        PlayerMaterials = new List<MaterialData>();
+        PlayerMaterials = new List<MaterialInfo>();
     }
 
     /////////////////
@@ -49,9 +49,12 @@ public class InventoryContent
 
         JsonArray materials = json.Get<JsonArray>("materials");
 
-        foreach (string item in materials)
+        foreach (JsonObject item in materials)
         {
-            PlayerMaterials.Add(GameDataStorage.Instance.GetMaterialByName(item));
+            MaterialData data = GameDataStorage.Instance.GetMaterialByName((string)item["name"]);
+            int amount = item.GetInt("amount");
+
+            PlayerMaterials.Add(new MaterialInfo(data, amount));
         }
     }
 
@@ -61,10 +64,26 @@ public class InventoryContent
         if (material == null)
             return;
 
-        PlayerMaterials.Add(material);
+        MaterialInfo materialToAdd = null;
+
+        foreach (MaterialInfo materialInfo in PlayerMaterials)
+        {
+            if (materialInfo.Data.Name == material.Name)
+            {
+                materialInfo.AddMaterial(1);
+                materialToAdd = materialInfo;
+                break;
+            }
+        }
+
+        if (materialToAdd == null)
+        {
+            materialToAdd = new MaterialInfo(material, 1);
+            PlayerMaterials.Add(materialToAdd);
+        }
 
         if (OnInventoryContentChanged != null)
-            OnInventoryContentChanged();
+            OnInventoryContentChanged(materialToAdd);
     }
 
     /////////////////
@@ -89,7 +108,7 @@ public class InventoryContent
             //
 
             if (OnInventoryContentChanged != null)
-                OnInventoryContentChanged();
+                OnInventoryContentChanged(item);
         }
     }
 
@@ -103,7 +122,7 @@ public class InventoryContent
                 PlayerEquipments.Remove(item);
 
                 if (OnInventoryContentChanged != null)
-                    OnInventoryContentChanged();
+                    OnInventoryContentChanged(itemToRemove);
 
                 return;
             }

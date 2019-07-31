@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -7,9 +7,10 @@ using UnityEngine.EventSystems;
 public class InventoryCell : MonoBehaviour, IPointerClickHandler
 {
     public Image m_Icon;
+    public TextMeshProUGUI m_AmountText;
 
     private EquipmentItem m_EquipmentItem;
-    private MaterialData m_MaterialItem;
+    private MaterialInfo m_MaterialItem;
 
     //////////////
     public void OnPointerClick(PointerEventData eventData)
@@ -25,12 +26,14 @@ public class InventoryCell : MonoBehaviour, IPointerClickHandler
     //////////////
     public void SetItem(IItem item)
     {
+        m_AmountText.gameObject.SetActive(false);
+
         if (item == null)
         {
             SetItemIcon(null);
             return;
         }
-
+        
         ItemType type = item.GetItemType();
 
         if (type == ItemType.equipment)
@@ -41,9 +44,12 @@ public class InventoryCell : MonoBehaviour, IPointerClickHandler
         }
         else if (type == ItemType.material)
         {
-            m_MaterialItem = (MaterialData)item;
+            m_MaterialItem = (MaterialInfo)item;
 
             SetItemIcon(m_MaterialItem.GetIcon());
+
+            m_AmountText.gameObject.SetActive(true);
+            m_AmountText.text = m_MaterialItem.Amount.ToString();
         }
     }
 

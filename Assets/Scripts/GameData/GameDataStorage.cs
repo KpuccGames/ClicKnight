@@ -23,6 +23,7 @@ public class GameDataStorage
     public List<EnemyData> Enemies { get; private set; }
     public List<MissionData> Missions { get; private set; }
     public List<MaterialData> Materials { get; private set; }
+    public List<AbilityData> Abilities { get; private set; }
 
     public JsonArray NewProfileData { get; private set; }
 
@@ -77,6 +78,15 @@ public class GameDataStorage
                     NewProfileData = dataArray;
                     break;
 
+                case "abilities":
+                    Abilities = new List<AbilityData>();
+
+                    foreach (JsonObject obj in dataArray)
+                    {
+                        Abilities.Add(new AbilityData(obj));
+                    }
+                    break;
+
                 default:
                     Debug.LogError("Wrong storage name");
                     break;
@@ -118,6 +128,18 @@ public class GameDataStorage
         {
             if (material.Name == name)
                 return material;
+        }
+
+        return null;
+    }
+    
+    ///////////////
+    public AbilityData GetAbilityByName(string name)
+    {
+        foreach (AbilityData ability in Abilities)
+        {
+            if (ability.Name == name)
+                return ability;
         }
 
         return null;

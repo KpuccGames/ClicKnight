@@ -17,6 +17,7 @@ public class EnemyData
     public int Health { get; private set; }
     public float AttackRate { get; private set; }
     public List<MaterialData> Drops { get; private set; }
+    public string Ability { get; private set; }
 
     ///////////////
     public EnemyData(JsonObject json)
@@ -35,6 +36,8 @@ public class EnemyData
         {
             Drops.Add(GameDataStorage.Instance.GetMaterialByName(dropItem));
         }
+
+        Ability = (string)json["ability"];
     }
 
     ///////////////

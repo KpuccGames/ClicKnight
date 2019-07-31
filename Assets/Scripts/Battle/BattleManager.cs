@@ -15,7 +15,13 @@ public class BattleManager : MonoBehaviour
     public Transform m_EnemySpawnPoint;
     public TextMeshProUGUI m_StageCountertext;
 
+    [Header("Ability evade")]
+    public RectTransform m_TapEvadePrefabsPlaceMask;
+    public AbilityTapEvadePrefab m_TapPrefab;
+
     private Enemy m_EnemyCharacter;
+    private Coroutine m_AbilityCastingCoroutine;
+
     private const float m_EnemySpawnDelay = 1f;
 
     private static MissionData m_CurrentMission;
@@ -160,6 +166,21 @@ public class BattleManager : MonoBehaviour
         m_PlayerHero.SetEnemy(m_EnemyCharacter);
 
         Debug.Log("Spawned " + m_EnemyCharacter.name);
+    }
+
+    //////////////
+    public void CreateAbilityCastObject(int damage, float reactionTime)
+    {
+        AbilityTapEvadePrefab evadeItem = Instantiate(m_TapPrefab, m_TapEvadePrefabsPlaceMask);
+        evadeItem.Setup(damage, reactionTime);
+
+        float width = m_TapEvadePrefabsPlaceMask.rect.width / 2;
+        float height = m_TapEvadePrefabsPlaceMask.rect.height / 2;
+
+        float itemPosX = UnityEngine.Random.Range(-width, width);
+        float itemPosY = UnityEngine.Random.Range(-height, height);
+
+        evadeItem.GetComponent<RectTransform>().localPosition = new Vector2(itemPosX, itemPosY);
     }
 
     //////////////

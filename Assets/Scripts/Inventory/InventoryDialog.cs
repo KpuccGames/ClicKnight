@@ -10,56 +10,78 @@ public class InventoryDialog : BaseDialog
     ////////////////
     private void OnEnable()
     {
-        InventoryContent.OnInventoryContentChanged += InitView;
+        InventoryContent.OnInventoryContentChanged += UpdateView;
     }
 
     ////////////////
     private void OnDisable()
     {
-        InventoryContent.OnInventoryContentChanged -= InitView;
+        InventoryContent.OnInventoryContentChanged -= UpdateView;
     }
 
     ////////////////
     public override void Show()
     {
+        if (gameObject.activeInHierarchy)
+        {
+            GameManager.Instance.SaveGame();
+            Hide();
+            return;
+        }
+
         base.Show();
 
-        InitView();
+        ShowEquipments();
 
         m_EquipmentView.UpdateEquipmentView();
     }
 
     ////////////////
-    public void InitView()
+    private void UpdateView(IItem item)
+    {
+        if (item.GetItemType() == ItemType.equipment)
+        {
+            ShowEquipments();
+        }
+        else
+        {
+            ShowMaterials();
+        }
+    }
+
+    ////////////////
+    public void ShowEquipments()
     {
         List<EquipmentItem> items = InventoryContent.Instance.PlayerEquipments;
 
-        int i = 0;
-
-        for (; i < m_InventoryCells.Length; i++)
+        for (int i = 0; i < m_InventoryCells.Length; i++)
         {
             if (i >= items.Count)
             {
-                break;
-            }
-
-            m_InventoryCells[i].SetItem(items[i]);
-        }
-
-        List<MaterialData> materials = InventoryContent.Instance.PlayerMaterials;
-
-        for (int j = 0; j < (m_InventoryCells.Length - items.Count); j++)
-        {
-            if (j >= (materials.Count))
-            {
                 m_InventoryCells[i].SetItem(null);
-                i++;
 
                 continue;
             }
 
-            m_InventoryCells[i].SetItem(materials[j]);
-            i++;
+            m_InventoryCells[i].SetItem(items[i]);
+        }
+    }
+
+    ////////////////
+    public void ShowMaterials()
+    {
+        List<MaterialInfo> materials = InventoryContent.Instance.PlayerMaterials;
+
+        for (int i = 0; i < (m_InventoryCells.Length); i++)
+        {
+            if (i >= (materials.Count))
+            {
+                m_InventoryCells[i].SetItem(null);
+
+                continue;
+            }
+
+            m_InventoryCells[i].SetItem(materials[i]);
         }
     }
 

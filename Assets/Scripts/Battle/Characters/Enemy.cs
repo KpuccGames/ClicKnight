@@ -13,6 +13,10 @@ public class Enemy : Character
     private EnemyData m_EnemyData;
     private PlayerHero m_PlayerHero;
 
+    private bool m_IsCastingAbility;
+    private DateTime m_AbilityCastedLastTime = DateTime.MinValue;
+    private Coroutine m_AbilityCastingProcess;
+
     public static event Action<EnemyData> OnEnemyDeath;
 
     //////////////
@@ -35,6 +39,11 @@ public class Enemy : Character
     //////////////
     public override void Attack()
     {
+        TryStartCastAbility();
+
+        if (m_IsCastingAbility)
+            return;
+
         m_PlayerHero.TakeDamage(AttackPower);
     }
 
@@ -60,6 +69,12 @@ public class Enemy : Character
         {
             Debug.Log(m_EnemyData.Name + " is dead");
 
+            if (m_AbilityCastingProcess != null)
+            {
+                StopCoroutine(m_AbilityCastingProcess);
+                m_AbilityCastingProcess = null;
+            }
+
             if (OnEnemyDeath != null)
                 OnEnemyDeath(m_EnemyData);
 
@@ -76,5 +91,50 @@ public class Enemy : Character
 
             Attack();
         }
+    }
+
+    //////////////
+    private void TryStartCastAbility()
+    {
+        if (IsAbilityOnCooldown())
+            return;
+
+        bool isCasting = Helper.CheckChance01(.5f);
+
+        if (!isCasting)
+            return;
+
+        m_IsCastingAbility = true;
+
+        m_AbilityCastingProcess = StartCoroutine(StartCastAbility());
+        m_AbilityCastedLastTime = DateTime.UtcNow;
+    }
+
+    //////////////
+    private IEnumerator StartCastAbility()
+    {
+        AbilityData ability = GameDataStorage.Instance.GetAbilityByName(m_EnemyData.Ability);
+
+        for (int i = 0; i < ability.Strikes.Length; i++)
+        {
+            BattleManager.Instance.CreateAbilityCastObject(ability.Strikes[i], ability.ReactionTime);
+
+            yield return new WaitForSecondsRealtime(ability.ReactionTime);
+        }
+
+        m_IsCastingAbility = false;
+    }
+
+    //////////////
+    private bool IsAbilityOnCooldown()
+    {
+        AbilityData ability = GameDataStorage.Instance.GetAbilityByName(m_EnemyData.Ability);
+
+        if (ability == null)
+            return true;
+
+        TimeSpan dt = TimeSpan.FromSeconds(ability.Cooldown);
+
+        return m_AbilityCastedLastTime + dt > DateTime.UtcNow;
     }
 }

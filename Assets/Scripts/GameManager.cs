@@ -36,8 +36,7 @@ public class GameManager
         }
         
         SceneManager.LoadScene(SceneName.Home);
-
-        InventoryContent.OnInventoryContentChanged += SaveGame;
+        
         PlayerProfile.OnEquipmentChanged += SaveGame;
     }
 
@@ -62,13 +61,19 @@ public class GameManager
         inventoryContent.Add("equipments", equipmentsArray);
         
         // сохраняем материалы
-        List<MaterialData> materials = InventoryContent.Instance.PlayerMaterials;
+        List<MaterialInfo> materials = InventoryContent.Instance.PlayerMaterials;
 
         JsonArray materialsArray = new JsonArray();
         
-        foreach (MaterialData item in materials)
+        foreach (MaterialInfo item in materials)
         {
-            materialsArray.Add(item.Name);
+            JsonObject materialJson = new JsonObject()
+            {
+                { "name", item.Data.Name },
+                { "amount", item.Amount }
+            };
+
+            materialsArray.Add(materialJson);
         }
 
         inventoryContent.Add("materials", materialsArray);
