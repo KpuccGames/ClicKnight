@@ -24,6 +24,7 @@ public class GameDataStorage
     public List<MissionData> Missions { get; private set; }
     public List<MaterialData> Materials { get; private set; }
     public List<AbilityData> Abilities { get; private set; }
+    public List<CraftingData> CraftReceipies { get; private set; }
 
     public JsonArray NewProfileData { get; private set; }
 
@@ -84,6 +85,15 @@ public class GameDataStorage
                     foreach (JsonObject obj in dataArray)
                     {
                         Abilities.Add(new AbilityData(obj));
+                    }
+                    break;
+
+                case "crafting":
+                    CraftReceipies = new List<CraftingData>();
+
+                    foreach (JsonObject obj in dataArray)
+                    {
+                        CraftReceipies.Add(new CraftingData(obj));
                     }
                     break;
 

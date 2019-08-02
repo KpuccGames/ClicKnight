@@ -113,6 +113,44 @@ public class InventoryContent
     }
 
     /////////////////
+    private MaterialInfo GetMaterialInfo(MaterialData data)
+    {
+        MaterialInfo info = PlayerMaterials.Find((mat) => mat.Data.Name.Equals(data.Name));
+
+        return info;
+    }
+
+    /////////////////
+    public bool TryRemoveMaterial(MaterialData data, int amount)
+    {
+        MaterialInfo info = GetMaterialInfo(data);
+
+        if (info == null)
+            return false;
+
+        if (info.TryRemoveMaterial(amount))
+        {
+            if (info.Amount <= 0)
+                PlayerMaterials.Remove(info);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /////////////////
+    public int GetMaterialAmount(MaterialData data)
+    {
+        MaterialInfo info = GetMaterialInfo(data);
+
+        if (info == null)
+            return 0;
+
+        return info.Amount;
+    }
+
+    /////////////////
     public void RemoveItem(EquipmentItem itemToRemove)
     {
         foreach (EquipmentItem item in PlayerEquipments)

@@ -40,6 +40,6 @@ public class MaterialInfo : IItem
     ////////////////
     public Sprite GetIcon()
     {
-        return Resources.Load<Sprite>(Data.Icon);
+        return Data.GetIcon();
     }
 }

@@ -14,4 +14,10 @@ public class MaterialData
         DropChance = json.GetFloat("drop_chance", -1);
         Icon = (string)json["icon"];
     }
+
+    /////////////////
+    public Sprite GetIcon()
+    {
+        return Resources.Load<Sprite>(Icon);
+    }
 }
