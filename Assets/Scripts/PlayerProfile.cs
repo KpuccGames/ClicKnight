@@ -19,7 +19,6 @@ public class PlayerProfile
 
     public int Health { get; private set; }
     public int BaseDamage { get; private set; }
-    public int Armor { get; private set; }
     public Dictionary<EquipmentSlot, EquipmentItem> HeroEquipment { get; private set; }
 
     public int NormalWorldMissionNumber { get; private set; }
@@ -45,10 +44,6 @@ public class PlayerProfile
         DarknessWorldMissionNumber = json.GetInt(Constants.DarknessWorldMissionNumber);
 
         HeroEquipment = new Dictionary<EquipmentSlot, EquipmentItem>();
-
-        string equipName = (string)json["base_weapon"];
-        EquipmentItem equip = GameDataStorage.Instance.GetEquipmentByName(equipName);
-        HeroEquipment.Add(equip.Slot, equip);
     }
 
     ///////////////
@@ -65,16 +60,16 @@ public class PlayerProfile
     }
 
     ///////////////
-    public int GetArmor()
+    public int GetHealth()
     {
-        int armor = Armor;
+        int health = Health;
 
         foreach (EquipmentItem equipment in HeroEquipment.Values)
         {
-            armor += equipment.ArmorBonus;
+            health += equipment.HealthBonus;
         }
 
-        return armor;
+        return health;
     }
 
     ///////////////
@@ -192,7 +187,6 @@ public class PlayerProfile
 
         Health = json.GetInt("health");
         BaseDamage = json.GetInt("damage");
-        Armor = json.GetInt("armor");
 
         // подписка на ивент обновления прогресса
         BattleManager.OnMissionComplete += TryUpdateProgress;

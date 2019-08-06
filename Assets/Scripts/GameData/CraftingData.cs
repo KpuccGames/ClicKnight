@@ -13,8 +13,8 @@ public class CraftingData
     {
         m_CraftItem = (string)json["name"];
         m_Ingredient1 = (string)json["ingredient_1"];
-        m_Ingredient2 = (string)json["ingredient_2"];
+        m_Ingredient2 = json.GetString("ingredient_2", string.Empty);
         m_Ingredient1Amount = json.GetInt("ingredient_1_amount");
-        m_Ingredient2Amount = json.GetInt("ingredient_2_amount");
+        m_Ingredient2Amount = json.GetInt("ingredient_2_amount", 0);
     }
 }

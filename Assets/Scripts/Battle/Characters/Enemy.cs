@@ -27,7 +27,6 @@ public class Enemy : Character
         Health = m_EnemyData.Health;
         AttackPower = m_EnemyData.Damage;
         CriticalAttackChance = 0;
-        Armor = 0;
 
         m_EnemyHealthText.text = Health.ToString();
 

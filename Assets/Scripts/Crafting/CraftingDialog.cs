@@ -53,17 +53,29 @@ public class CraftingDialog : BaseDialog
         MaterialData ingredient1 = GameDataStorage.Instance.GetMaterialByName(m_CurrentRecipe.m_Ingredient1);
         MaterialData ingredient2 = GameDataStorage.Instance.GetMaterialByName(m_CurrentRecipe.m_Ingredient2);
 
+        if (ingredient2 != null)
+        {
+            m_Ingredient2Icon.gameObject.SetActive(true);
+            m_Ingredient2Amount.gameObject.SetActive(true);
+
+            m_Ingredient2Icon.overrideSprite = ingredient2.GetIcon();
+            
+            string ingredient2text = m_CurrentRecipe.m_Ingredient2Amount.ToString() + " / "
+                + InventoryContent.Instance.GetMaterialAmount(ingredient2);
+            m_Ingredient2Amount.text = ingredient2text;
+        }
+        else
+        {
+            m_Ingredient2Icon.gameObject.SetActive(false);
+            m_Ingredient2Amount.gameObject.SetActive(false);
+        }
+
         m_Ingredient1Icon.overrideSprite = ingredient1.GetIcon();
-        m_Ingredient2Icon.overrideSprite = ingredient2.GetIcon();
 
         string ingredient1text = m_CurrentRecipe.m_Ingredient1Amount.ToString() + " / "
             + InventoryContent.Instance.GetMaterialAmount(ingredient1);
 
-        string ingredient2text = m_CurrentRecipe.m_Ingredient2Amount.ToString() + " / "
-            + InventoryContent.Instance.GetMaterialAmount(ingredient2);
-
         m_Ingredient1Amount.text = ingredient1text;
-        m_Ingredient2Amount.text = ingredient2text;
     }
 
     ////////////////

@@ -19,8 +19,7 @@ public class PlayerHero : Character
     {
         // setup персонажа игрока
         AttackPower = PlayerProfile.Instance.GetDamage();
-        Health = PlayerProfile.Instance.Health;
-        Armor = PlayerProfile.Instance.GetArmor();
+        Health = PlayerProfile.Instance.GetHealth();
 
         m_PlayerHealth.text = Health.ToString();
     }
@@ -28,16 +27,14 @@ public class PlayerHero : Character
     //////////////
     public override void TakeDamage(int damage)
     {
-        int calculatedDamage = damage - Armor;
-
-        Debug.Log("Enemy attacks " + calculatedDamage);
+        Debug.Log("Enemy attacks " + damage);
 
         //
         // NOTE: сначала обработка входящего дамага, потом базовое применение
         //
 
-        if (calculatedDamage > 0)
-            Health -= calculatedDamage;
+        if (damage > 0)
+            Health -= damage;
 
         if (Health < 0)
             Health = 0;

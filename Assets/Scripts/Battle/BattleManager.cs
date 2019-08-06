@@ -155,8 +155,7 @@ public class BattleManager : MonoBehaviour
     {
         m_EnemyCharacter = null;
 
-        int random = UnityEngine.Random.Range(0, m_CurrentMission.Enemies.Count);
-        EnemyData enemy = m_CurrentMission.Enemies[random];
+        EnemyData enemy = m_CurrentMission.GetEnemy(m_CurrentStage);
 
         yield return new WaitForSecondsRealtime(m_EnemySpawnDelay);
 

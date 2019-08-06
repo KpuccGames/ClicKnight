@@ -115,6 +115,9 @@ public class InventoryContent
     /////////////////
     private MaterialInfo GetMaterialInfo(MaterialData data)
     {
+        if (data == null)
+            return null;
+
         MaterialInfo info = PlayerMaterials.Find((mat) => mat.Data.Name.Equals(data.Name));
 
         return info;
