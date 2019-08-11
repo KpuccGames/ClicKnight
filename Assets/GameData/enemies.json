@@ -1,1 +1,134 @@
-[{"name":"witch","prefab":"Prefabs/Enemies/Witch","attack_type":0,"damage":8,"health":20,"attack_rate":1.5,"drops":"ingot","ability":"easyAb","type":0},{"name":"madman","prefab":"Prefabs/Enemies/Madman","attack_type":0,"damage":10,"health":20,"attack_rate":1.5,"drops":"ingot","ability":"easyAb","type":0},{"name":"e_alchemist","prefab":"Prefabs/Enemies/Alchemist","attack_type":0,"damage":20,"health":40,"attack_rate":2,"drops":"ingot,gem","ability":"","type":1},{"name":"rouge","prefab":"Prefabs/Enemies/Rouge","attack_type":0,"damage":12,"health":25,"attack_rate":"0,8","drops":"ingot,gem","ability":"","type":0},{"name":"b_dark_shaman","prefab":"Prefabs/Enemies/DarkShaman","attack_type":0,"damage":20,"health":100,"attack_rate":2,"drops":"ingot,gem","ability":"testAb","type":2},{"name":"e_bear","prefab":"Prefabs/Enemies/Bear","attack_type":0,"damage":18,"health":50,"attack_rate":2,"drops":"ingot,gem","ability":"","type":1},{"name":"skeleton","prefab":"Prefabs/Enemies/Skeleton","attack_type":0,"damage":5,"health":35,"attack_rate":"1,2","drops":"ingot","ability":"","type":0},{"name":"water_elemental","prefab":"Prefabs/Enemies/WaterElemental","attack_type":1,"damage":3,"health":30,"attack_rate":1,"drops":"","ability":"","type":0},{"name":"fire_elemental","prefab":"Prefabs/Enemies/FireElemental","attack_type":2,"damage":10,"health":40,"attack_rate":"1,5","drops":"","ability":"","type":0},{"name":"air_elemental","prefab":"Prefabs/Enemies/AirElemental","attack_type":3,"damage":7,"health":20,"attack_rate":"0,5","drops":"","ability":"","type":0},{"name":"earth_elemental","prefab":"Prefabs/Enemies/EarthElemental","attack_type":4,"damage":25,"health":50,"attack_rate":3,"drops":"","ability":"","type":0}]
+[
+  {
+    "name": "witch",
+    "prefab": "Prefabs/Enemies/Witch",
+    "attack_type": 0,
+    "damage": 3,
+    "health": 20,
+    "attack_rate": "1,5",
+    "drops": "ingot",
+    "ability": "easyAb",
+    "type": 0
+  },
+  {
+    "name": "madman",
+    "prefab": "Prefabs/Enemies/Madman",
+    "attack_type": 0,
+    "damage": 4,
+    "health": 18,
+    "attack_rate": "1,5",
+    "drops": "ingot",
+    "ability": "easyAb",
+    "type": 0
+  },
+  {
+    "name": "e_alchemist",
+    "prefab": "Prefabs/Enemies/Alchemist",
+    "attack_type": 0,
+    "damage": 10,
+    "health": 40,
+    "attack_rate": 2,
+    "drops": "ingot,gem",
+    "ability": "",
+    "type": 1
+  },
+  {
+    "name": "rouge",
+    "prefab": "Prefabs/Enemies/Rouge",
+    "attack_type": 0,
+    "damage": 1,
+    "health": 40,
+    "attack_rate": "0,5",
+    "drops": "ingot,gem",
+    "ability": "",
+    "type": 0
+  },
+  {
+    "name": "b_dark_shaman",
+    "prefab": "Prefabs/Enemies/DarkShaman",
+    "attack_type": 0,
+    "damage": 20,
+    "health": 100,
+    "attack_rate": 2,
+    "drops": "ingot,gem",
+    "ability": "testAb",
+    "type": 2
+  },
+  {
+    "name": "e_bear",
+    "prefab": "Prefabs/Enemies/Bear",
+    "attack_type": 0,
+    "damage": 18,
+    "health": 50,
+    "attack_rate": 2,
+    "drops": "ingot,gem",
+    "ability": "",
+    "type": 1
+  },
+  {
+    "name": "skeleton",
+    "prefab": "Prefabs/Enemies/Skeleton",
+    "attack_type": 0,
+    "damage": 5,
+    "health": 35,
+    "attack_rate": "1,2",
+    "drops": "ingot",
+    "ability": "",
+    "type": 0
+  },
+  {
+    "name": "water_elemental",
+    "prefab": "Prefabs/Enemies/WaterElemental",
+    "attack_type": 1,
+    "damage": 3,
+    "health": 30,
+    "attack_rate": 1,
+    "drops": "",
+    "ability": "",
+    "type": 0
+  },
+  {
+    "name": "fire_elemental",
+    "prefab": "Prefabs/Enemies/FireElemental",
+    "attack_type": 2,
+    "damage": 10,
+    "health": 40,
+    "attack_rate": "1,5",
+    "drops": "",
+    "ability": "",
+    "type": 0
+  },
+  {
+    "name": "air_elemental",
+    "prefab": "Prefabs/Enemies/AirElemental",
+    "attack_type": 3,
+    "damage": 7,
+    "health": 20,
+    "attack_rate": "0,5",
+    "drops": "",
+    "ability": "",
+    "type": 0
+  },
+  {
+    "name": "earth_elemental",
+    "prefab": "Prefabs/Enemies/EarthElemental",
+    "attack_type": 4,
+    "damage": 25,
+    "health": 50,
+    "attack_rate": 3,
+    "drops": "",
+    "ability": "",
+    "type": 0
+  },
+  {
+    "name": "weak_elemental",
+    "prefab": "Prefabs/Enemies/EarthElemental",
+    "attack_type": 0,
+    "damage": 10,
+    "health": 80,
+    "attack_rate": "1,1",
+    "drops": "ingot,gem",
+    "ability": "",
+    "type": 0
+  }
+]
