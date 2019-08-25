@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 
-public static class CKTools
+public class CKTools : MonoBehaviour
 {
     [MenuItem("Tools/Open Scene/MainMenu")]
     public static void OpenMainMenuScene()
