@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace SimpleJson 
 {
@@ -26,7 +27,12 @@ namespace SimpleJson
         ///
         public static float GetFloat(this JsonObject obj, string key) 
         {
-            return Convert.ToSingle(obj[key]);
+            // у российской локали разделитель для float - запятая
+            CultureInfo culture = CultureInfo.GetCultureInfo("ru-RU");
+
+            float num = Convert.ToSingle(obj[key].ToString(), culture);
+            
+            return num;
         }
         
         
