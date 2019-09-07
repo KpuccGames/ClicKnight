@@ -29,7 +29,6 @@ public class InventoryCell : MonoBehaviour, IPointerClickHandler
             return;
         
         PlayerProfile.Instance.EquipItem(m_EquipmentItem);
-        m_EquipmentItem = null;
 
         m_EquipButton.gameObject.SetActive(false);
     }
