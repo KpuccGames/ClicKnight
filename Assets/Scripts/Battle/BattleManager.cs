@@ -87,22 +87,7 @@ public class BattleManager : MonoBehaviour
     private void TryStartNextWave(EnemyData enemyData)
     {
         // дропаем предмет игроку
-        MaterialData droppedItem = null;
-
-        foreach (MaterialData drop in enemyData.Drops)
-        {
-            if (Helper.CheckDropEvent(drop.DropChance))
-            {
-                if (droppedItem == null)
-                {
-                    droppedItem = drop;
-                }
-                else if (droppedItem.DropChance > drop.DropChance)
-                {
-                    droppedItem = drop;
-                }
-            }
-        }
+        MaterialData droppedItem = enemyData.TryDropItem();
 
         if (droppedItem != null)
         {

@@ -25,6 +25,7 @@ public class GameDataStorage
     public List<MaterialData> Materials { get; private set; }
     public List<AbilityData> Abilities { get; private set; }
     public List<CraftingData> CraftReceipies { get; private set; }
+    public List<DropData> Drops { get; private set; }
 
     public JsonArray NewProfileData { get; private set; }
 
@@ -97,6 +98,15 @@ public class GameDataStorage
                     }
                     break;
 
+                case "drops":
+                    Drops = new List<DropData>();
+
+                    foreach (JsonObject obj in dataArray)
+                    {
+                        Drops.Add(new DropData(obj));
+                    }
+                    break;
+
                 default:
                     Debug.LogError("Wrong storage name");
                     break;
@@ -150,6 +160,18 @@ public class GameDataStorage
         {
             if (ability.Name == name)
                 return ability;
+        }
+
+        return null;
+    }
+
+    ///////////////
+    public DropData GetDropByName(string name)
+    {
+        foreach (DropData drop in Drops)
+        {
+            if (drop.DropName == name)
+                return drop;
         }
 
         return null;
