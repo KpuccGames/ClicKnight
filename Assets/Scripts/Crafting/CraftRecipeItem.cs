@@ -16,9 +16,18 @@ public class CraftRecipeItem : MonoBehaviour
     {
         m_Recipe = data;
 
-        EquipmentItem item = GameDataStorage.Instance.GetEquipmentByName(m_Recipe.m_CraftItem);
+        if (m_Recipe.CraftItemType == ItemType.equipment)
+        {
+            EquipmentItem item = GameDataStorage.Instance.GetEquipmentByName(m_Recipe.CraftItemName);
 
-        m_Icon.overrideSprite = item.GetIcon();
+            m_Icon.overrideSprite = item.GetIcon();
+        }
+        else
+        {
+            MaterialData item = GameDataStorage.Instance.GetMaterialByName(m_Recipe.CraftItemName);
+
+            m_Icon.overrideSprite = item.GetIcon();
+        }
     }
 
     ///////////////

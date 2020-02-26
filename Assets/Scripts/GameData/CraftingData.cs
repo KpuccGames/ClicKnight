@@ -2,19 +2,21 @@
 
 public class CraftingData
 {
-    public string m_CraftItem { get; private set; }
-    public string m_Ingredient1 { get; private set; }
-    public int m_Ingredient1Amount { get; private set; }
-    public string m_Ingredient2 { get; private set; }
-    public int m_Ingredient2Amount { get; private set; }
+    public string CraftItemName { get; private set; }
+    public string Ingredient1 { get; private set; }
+    public int Ingredient1Amount { get; private set; }
+    public string Ingredient2 { get; private set; }
+    public int Ingredient2Amount { get; private set; }
+    public ItemType CraftItemType { get; private set; }
 
     ////////////////
     public CraftingData(JsonObject json)
     {
-        m_CraftItem = (string)json["name"];
-        m_Ingredient1 = (string)json["ingredient_1"];
-        m_Ingredient2 = json.GetString("ingredient_2", string.Empty);
-        m_Ingredient1Amount = json.GetInt("ingredient_1_amount");
-        m_Ingredient2Amount = json.GetInt("ingredient_2_amount", 0);
+        CraftItemName = (string)json["name"];
+        Ingredient1 = (string)json["ingredient_1"];
+        Ingredient2 = json.GetString("ingredient_2", string.Empty);
+        Ingredient1Amount = json.GetInt("ingredient_1_amount");
+        Ingredient2Amount = json.GetInt("ingredient_2_amount", 0);
+        CraftItemType = (ItemType)json.GetInt("item_type");
     }
 }

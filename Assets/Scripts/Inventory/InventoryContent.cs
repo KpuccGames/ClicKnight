@@ -59,6 +59,15 @@ public class InventoryContent
     }
 
     /////////////////
+    public void AddMaterial(string materialName)
+    {
+        MaterialData material = GameDataStorage.Instance.GetMaterialByName(materialName);
+
+        if (material != null)
+            AddMaterial(material);
+    }
+
+    /////////////////
     public void AddMaterial(MaterialData material)
     {
         if (material == null)
