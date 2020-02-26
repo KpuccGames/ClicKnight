@@ -20,8 +20,6 @@ public class DropData
     ////////////////
     public bool IsDropped()
     {
-        float roll = Random.Range(0f, 100f);
-
-        return roll <= MaterialDropChance;
+        return Helper.CheckDropEvent(MaterialDropChance);
     }
 }

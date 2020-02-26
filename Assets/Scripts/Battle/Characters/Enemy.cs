@@ -74,6 +74,16 @@ public class Enemy : Character
                 m_AbilityCastingProcess = null;
             }
 
+            // дропаем предмет игроку
+            MaterialData droppedItem = m_EnemyData.TryDropItem();
+
+            if (droppedItem != null)
+            {
+                InventoryContent.Instance.AddMaterial(droppedItem);
+                Debug.Log("Dropped item " + droppedItem.Name);
+            }
+
+
             if (OnEnemyDeath != null)
                 OnEnemyDeath(m_EnemyData);
 

@@ -86,15 +86,6 @@ public class BattleManager : MonoBehaviour
     //////////////
     private void TryStartNextWave(EnemyData enemyData)
     {
-        // дропаем предмет игроку
-        MaterialData droppedItem = enemyData.TryDropItem();
-
-        if (droppedItem != null)
-        {
-            InventoryContent.Instance.AddMaterial(droppedItem);
-            Debug.Log("Dropped item " + droppedItem.Name);
-        }
-
         Debug.Log("Completed stage " + m_CurrentStage);
         m_CurrentStage++;
 
