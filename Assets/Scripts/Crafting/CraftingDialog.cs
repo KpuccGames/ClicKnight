@@ -46,6 +46,7 @@ public class CraftingDialog : BaseDialog
 
         m_CurrentRecipe = data;
 
+        // Отображаем иконку создаваевомого предмета
         if (m_CurrentRecipe.CraftItemType == ItemType.equipment)
         {
             EquipmentItem craftItem = GameDataStorage.Instance.GetEquipmentByName(m_CurrentRecipe.CraftItemName);
@@ -58,17 +59,59 @@ public class CraftingDialog : BaseDialog
 
             m_ItemResultIcon.overrideSprite = craftItem.GetIcon();
         }
-        
+
+        // отображаем ингредиенты для крафта
+        UpdateIngredientsView();
+    }
+
+    ////////////////
+    public void OnClickCraft()
+    {
+        if (m_CurrentRecipe == null)
+            return;
+
         MaterialData ingredient1 = GameDataStorage.Instance.GetMaterialByName(m_CurrentRecipe.Ingredient1);
         MaterialData ingredient2 = GameDataStorage.Instance.GetMaterialByName(m_CurrentRecipe.Ingredient2);
 
+        // проверяем наличие ингредиентов у игрока
+        int ing1amount = InventoryContent.Instance.GetMaterialAmount(ingredient1);
+
+        if (ing1amount < m_CurrentRecipe.Ingredient1Amount)
+            return;
+
+        int ing2amount = InventoryContent.Instance.GetMaterialAmount(ingredient2);
+
+        if (ing2amount < m_CurrentRecipe.Ingredient2Amount)
+            return;
+
+        // тратим ингредиенты
+        InventoryContent.Instance.TryRemoveMaterial(ingredient1, m_CurrentRecipe.Ingredient1Amount);
+        InventoryContent.Instance.TryRemoveMaterial(ingredient2, m_CurrentRecipe.Ingredient2Amount);
+
+        // добавляем изготовленный предмет
+        if (m_CurrentRecipe.CraftItemType == ItemType.equipment)
+            InventoryContent.Instance.AddEquipmentItem(m_CurrentRecipe.CraftItemName);
+        else
+            InventoryContent.Instance.AddMaterial(m_CurrentRecipe.CraftItemName);
+
+        // обновляем отображение
+        UpdateIngredientsView();
+    }
+
+    ////////////////
+    private void UpdateIngredientsView()
+    {
+        MaterialData ingredient1 = GameDataStorage.Instance.GetMaterialByName(m_CurrentRecipe.Ingredient1);
+        MaterialData ingredient2 = GameDataStorage.Instance.GetMaterialByName(m_CurrentRecipe.Ingredient2);
+
+        // если у рецепта 2 ингредиента, то показываем вторую ячейку
         if (ingredient2 != null)
         {
             m_Ingredient2Icon.gameObject.SetActive(true);
             m_Ingredient2Amount.gameObject.SetActive(true);
 
             m_Ingredient2Icon.overrideSprite = ingredient2.GetIcon();
-            
+
             string ingredient2text = m_CurrentRecipe.Ingredient2Amount.ToString() + " / "
                 + InventoryContent.Instance.GetMaterialAmount(ingredient2);
             m_Ingredient2Amount.text = ingredient2text;
@@ -85,34 +128,6 @@ public class CraftingDialog : BaseDialog
             + InventoryContent.Instance.GetMaterialAmount(ingredient1);
 
         m_Ingredient1Amount.text = ingredient1text;
-    }
-
-    ////////////////
-    public void OnClickCraft()
-    {
-        if (m_CurrentRecipe == null)
-            return;
-
-        MaterialData ingredient1 = GameDataStorage.Instance.GetMaterialByName(m_CurrentRecipe.Ingredient1);
-        MaterialData ingredient2 = GameDataStorage.Instance.GetMaterialByName(m_CurrentRecipe.Ingredient2);
-
-        int ing1amount = InventoryContent.Instance.GetMaterialAmount(ingredient1);
-
-        if (ing1amount < m_CurrentRecipe.Ingredient1Amount)
-            return;
-
-        int ing2amount = InventoryContent.Instance.GetMaterialAmount(ingredient2);
-
-        if (ing2amount < m_CurrentRecipe.Ingredient2Amount)
-            return;
-
-        InventoryContent.Instance.TryRemoveMaterial(ingredient1, m_CurrentRecipe.Ingredient1Amount);
-        InventoryContent.Instance.TryRemoveMaterial(ingredient2, m_CurrentRecipe.Ingredient2Amount);
-
-        if (m_CurrentRecipe.CraftItemType == ItemType.equipment)
-            InventoryContent.Instance.AddEquipmentItem(m_CurrentRecipe.CraftItemName);
-        else
-            InventoryContent.Instance.AddMaterial(m_CurrentRecipe.CraftItemName);
     }
 
     ////////////////
