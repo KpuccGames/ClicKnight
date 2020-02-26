@@ -33,10 +33,10 @@ public class EnemyData
         Name = (string)json["name"];
         Prefab = (string)json["prefab"];
         AttackType = (AttackType)json.GetInt("attack_type", 0);
-        Damage = json.GetInt("damage");
-        Health = json.GetInt("health");
-        AttackRate = json.GetFloat("attack_rate");
-        Type = (EnemyType)json.GetInt("type");
+        Damage = json.GetInt("damage", 0);
+        Health = json.GetInt("health", 0);
+        AttackRate = json.GetFloat("attack_rate", 0);
+        Type = (EnemyType)json.GetInt("type", 0);
 
         Drops = new List<DropData>();
         string[] dropList = json.GetString("drops", string.Empty).Split(',');
