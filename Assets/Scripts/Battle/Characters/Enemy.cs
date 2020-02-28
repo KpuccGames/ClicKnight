@@ -106,11 +106,6 @@ public class Enemy : Character
         if (IsAbilityOnCooldown())
             return;
 
-        bool isCasting = Helper.CheckChance01(.5f);
-
-        if (!isCasting)
-            return;
-
         m_IsCastingAbility = true;
 
         m_AbilityCastingProcess = StartCoroutine(StartCastAbility());
