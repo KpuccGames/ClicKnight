@@ -59,16 +59,16 @@ public class InventoryContent
     }
 
     /////////////////
-    public void AddMaterial(string materialName)
+    public void AddMaterial(string materialName, int amount = 1)
     {
         MaterialData material = GameDataStorage.Instance.GetMaterialByName(materialName);
 
         if (material != null)
-            AddMaterial(material);
+            AddMaterial(material, amount);
     }
 
     /////////////////
-    public void AddMaterial(MaterialData material)
+    public void AddMaterial(MaterialData material, int amount = 1)
     {
         if (material == null)
             return;
@@ -77,17 +77,19 @@ public class InventoryContent
 
         foreach (MaterialInfo materialInfo in PlayerMaterials)
         {
+            // если в инвентаре есть такой материал, то добавляем
             if (materialInfo.Data.Name == material.Name)
             {
-                materialInfo.AddMaterial(1);
+                materialInfo.AddMaterial(amount);
                 materialToAdd = materialInfo;
                 break;
             }
         }
 
+        // если материала в инвентаре не было, то создаем и прибавляем
         if (materialToAdd == null)
         {
-            materialToAdd = new MaterialInfo(material, 1);
+            materialToAdd = new MaterialInfo(material, amount);
             PlayerMaterials.Add(materialToAdd);
         }
 

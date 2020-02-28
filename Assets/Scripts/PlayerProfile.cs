@@ -119,8 +119,27 @@ public class PlayerProfile
         switch (completedMission.World)
         {
             case MissionWorld.Normal:
-                if (completedMission.Number == NormalWorldMissionNumber)
+                int number = completedMission.Number;
+
+                // если первый раз прошли миссию
+                if (number == NormalWorldMissionNumber)
+                {
                     NormalWorldMissionNumber++;
+
+                    // 
+                    // NOTE: имитация туториала, потом привести в нормальный вид
+                    //
+                    switch (number)
+                    {
+                        case 2:
+                            InventoryContent.Instance.AddEquipmentItem("axe");
+                            break;
+
+                        case 3:
+                            InventoryContent.Instance.AddMaterial("ingot", 15);
+                            break;
+                    }
+                }
                 break;
         }
 
