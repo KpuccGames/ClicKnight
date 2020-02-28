@@ -17,7 +17,7 @@ public class Enemy : Character
     private DateTime m_AbilityCastedLastTime = DateTime.MinValue;
     private Coroutine m_AbilityCastingProcess;
 
-    public static event Action<EnemyData> OnEnemyDeath;
+    public static event Action OnEnemyDeath;
 
     //////////////
     public void SetupEnemy(EnemyData data)
@@ -82,10 +82,8 @@ public class Enemy : Character
                 InventoryContent.Instance.AddMaterial(droppedItem);
                 Debug.Log("Dropped item " + droppedItem.Name);
             }
-
-
-            if (OnEnemyDeath != null)
-                OnEnemyDeath(m_EnemyData);
+            
+            OnEnemyDeath?.Invoke();
 
             Destroy(gameObject);
         }

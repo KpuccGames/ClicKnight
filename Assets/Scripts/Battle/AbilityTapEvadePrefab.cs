@@ -46,7 +46,7 @@ public class AbilityTapEvadePrefab : MonoBehaviour
     }
 
     /////////////////
-    private void OnEnemyDied(EnemyData enemy)
+    private void OnEnemyDied()
     {
         if (m_ProcessCoroutine != null)
         {
