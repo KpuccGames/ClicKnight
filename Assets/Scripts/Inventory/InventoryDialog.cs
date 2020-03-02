@@ -1,22 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System.Text;
+using System.Collections.Generic;
 using UnityEngine;
-using SimpleJson;
+using TMPro;
 
 public class InventoryDialog : BaseDialog
 {
     public InventoryCell[] m_InventoryCells;
     public HeroEquipmentView m_EquipmentView;
+    public TextMeshProUGUI m_ItemStatsText;
 
     ////////////////
     private void OnEnable()
     {
         InventoryContent.OnInventoryContentChanged += UpdateView;
+        InventoryCell.OnItemSelected += UpdateSelectedItemInfo;
     }
 
     ////////////////
     private void OnDisable()
     {
         InventoryContent.OnInventoryContentChanged -= UpdateView;
+        InventoryCell.OnItemSelected -= UpdateSelectedItemInfo;
     }
 
     ////////////////
@@ -83,6 +87,36 @@ public class InventoryDialog : BaseDialog
 
             m_InventoryCells[i].SetItem(materials[i]);
         }
+    }
+
+    ////////////////
+    private void UpdateSelectedItemInfo(IItem item)
+    {
+        if (item == null)
+        {
+            m_ItemStatsText.text = string.Empty;
+            return;
+        }
+
+        // TODO добавить информацию о материалах
+        StringBuilder sb = new StringBuilder();
+
+        if (item.GetItemType() == ItemType.equipment)
+        {
+            EquipmentItem equipment = (EquipmentItem)item;
+
+            sb.AppendLine(equipment.Name);
+            sb.AppendLine("Attack: " + equipment.AttackBonus);
+            sb.AppendLine("Health: " + equipment.HealthBonus);
+        }
+        else
+        {
+            MaterialInfo material = (MaterialInfo)item;
+
+            sb.AppendLine(material.Data.Name);
+        }
+
+        m_ItemStatsText.text = sb.ToString();
     }
 
     /////////////////
