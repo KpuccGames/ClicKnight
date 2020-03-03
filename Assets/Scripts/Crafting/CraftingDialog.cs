@@ -13,6 +13,7 @@ public class CraftingDialog : BaseDialog
     public Image m_Ingredient2Icon;
     public TextMeshProUGUI m_Ingredient1Amount;
     public TextMeshProUGUI m_Ingredient2Amount;
+    public TextMeshProUGUI m_ItemInfoText;
 
     private CraftingData m_CurrentRecipe;
 
@@ -45,23 +46,28 @@ public class CraftingDialog : BaseDialog
             return;
 
         m_CurrentRecipe = data;
+        IItem craftItem = null;
 
-        // Отображаем иконку создаваевомого предмета
+        // определяем тип предмета
         if (m_CurrentRecipe.CraftItemType == ItemType.equipment)
         {
-            EquipmentItem craftItem = GameDataStorage.Instance.GetEquipmentByName(m_CurrentRecipe.CraftItemName);
-
-            m_ItemResultIcon.overrideSprite = craftItem.GetIcon();
+            craftItem = GameDataStorage.Instance.GetEquipmentByName(m_CurrentRecipe.CraftItemName);
         }
         else
         {
-            MaterialData craftItem = GameDataStorage.Instance.GetMaterialByName(m_CurrentRecipe.CraftItemName);
+            MaterialData matData = GameDataStorage.Instance.GetMaterialByName(m_CurrentRecipe.CraftItemName);
 
-            m_ItemResultIcon.overrideSprite = craftItem.GetIcon();
+            craftItem = new MaterialInfo(matData, 0);
         }
+
+        // Отображаем иконку создаваевомого предмета
+        m_ItemResultIcon.overrideSprite = craftItem.GetIcon();
 
         // отображаем ингредиенты для крафта
         UpdateIngredientsView();
+
+        // показываем информацию о предмете крафта
+        m_ItemInfoText.text = UIHelper.GetItemInformationText(craftItem);
     }
 
     ////////////////
@@ -112,8 +118,7 @@ public class CraftingDialog : BaseDialog
 
             m_Ingredient2Icon.overrideSprite = ingredient2.GetIcon();
 
-            string ingredient2text = m_CurrentRecipe.Ingredient2Amount.ToString() + " / "
-                + InventoryContent.Instance.GetMaterialAmount(ingredient2);
+            string ingredient2text = string.Format("{0} / {1}", InventoryContent.Instance.GetMaterialAmount(ingredient2), m_CurrentRecipe.Ingredient2Amount);
             m_Ingredient2Amount.text = ingredient2text;
         }
         else
@@ -124,8 +129,7 @@ public class CraftingDialog : BaseDialog
 
         m_Ingredient1Icon.overrideSprite = ingredient1.GetIcon();
 
-        string ingredient1text = m_CurrentRecipe.Ingredient1Amount.ToString() + " / "
-            + InventoryContent.Instance.GetMaterialAmount(ingredient1);
+        string ingredient1text = string.Format("{0} / {1}", InventoryContent.Instance.GetMaterialAmount(ingredient1), m_CurrentRecipe.Ingredient1Amount);
 
         m_Ingredient1Amount.text = ingredient1text;
     }

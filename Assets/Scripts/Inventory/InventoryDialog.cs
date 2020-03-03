@@ -92,31 +92,7 @@ public class InventoryDialog : BaseDialog
     ////////////////
     private void UpdateSelectedItemInfo(IItem item)
     {
-        if (item == null)
-        {
-            m_ItemStatsText.text = string.Empty;
-            return;
-        }
-
-        // TODO добавить информацию о материалах
-        StringBuilder sb = new StringBuilder();
-
-        if (item.GetItemType() == ItemType.equipment)
-        {
-            EquipmentItem equipment = (EquipmentItem)item;
-
-            sb.AppendLine(equipment.Name);
-            sb.AppendLine("Attack: " + equipment.AttackBonus);
-            sb.AppendLine("Health: " + equipment.HealthBonus);
-        }
-        else
-        {
-            MaterialInfo material = (MaterialInfo)item;
-
-            sb.AppendLine(material.Data.Name);
-        }
-
-        m_ItemStatsText.text = sb.ToString();
+        m_ItemStatsText.text = UIHelper.GetItemInformationText(item);
     }
 
     /////////////////
