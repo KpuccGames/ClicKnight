@@ -62,7 +62,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Utils\Editor\CKTools.cs" />
+    <Compile Include="Assets\Scripts\Utils\Editor\CKTools.cs" />
     <Reference Include="UnityEditor.TestRunner">
       <HintPath>D:/Repositories/ClicKnight/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
     </Reference>

@@ -26,54 +26,7 @@ public static class Helper
     private static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
     private static readonly Regex GuildTextInput = new Regex("^[0-9A-Za-z ]+$");
     
-    public static bool IsPointerOverGameObject()
-    {
-#if UNITY_EDITOR || UNITY_STANDALONE
-        return EventSystem.current.IsPointerOverGameObject();
-#else
-        for (int i = 0; i < Input.touches.Length; i++)
-        {
-            if (EventSystem.current.IsPointerOverGameObject(Input.touches[i].fingerId))
-                return true;
-        }
-        return false;
-#endif
-    }
-
-    /// <summary>
-    /// Определяет, находится ли поинтер непосредственно над UI объектом
-    /// </summary>
-    public static bool IsPointerOverUI(int pointerId, Vector3 pointerPos)
-    {
-        if (!EventSystem.current.IsPointerOverGameObject(pointerId))
-            return false;
-
-        PointerEventData pointer = new PointerEventData(EventSystem.current)
-        {
-            position = pointerPos
-        };
-
-        List<RaycastResult> raycastResults = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(pointer, raycastResults);
-
-        if (raycastResults.Count > 0)
-        {
-            return raycastResults[0].gameObject.layer == LayerMask.NameToLayer("UI");
-        }
-        
-        return false;
-    }
-
-    public static string GetSaveFilesPath()
-    {
-        string path = Path.Combine(Application.persistentDataPath, "save");
-        
-        if (!Directory.Exists(path))
-            Directory.CreateDirectory(path);
-
-        return path;
-    }
-    
+    ////////////////
     public static double DateTimeToTimestampMs(DateTime time) 
     {
         return Math.Round(time.Subtract(Epoch).TotalMilliseconds);
@@ -121,15 +74,6 @@ public static class Helper
     }
 
     /// <summary>
-    /// Проверяет шанс попадания в указанный диапазон [0, 1]
-    /// </summary>
-    public static bool CheckChance01(float chance)
-    {
-        float rnd = UnityEngine.Random.value;
-        return rnd < chance;
-    }
-
-    /// <summary>
     /// Парсит json из строки
     /// </summary>
     public static JsonObject ParseJson(string data)
@@ -145,27 +89,6 @@ public static class Helper
     {
         JsonArray json = SimpleJson.SimpleJson.DeserializeObject<JsonArray>(data);
         return json;
-    }
-
-    ///////////////
-    private static void StatFormat(StringBuilder sb, string fmt, float value)
-    {
-        if (!Mathf.Approximately(value, 0))
-        {
-            sb.AppendFormat(fmt, value);
-            sb.AppendLine();
-        }
-    }
-
-    ///////////////
-    public static Rect GetScreenSafeArea()
-    {
-        #if UNITY_EDITOR
-        if (m_ApplyIphonexSafeArea)
-            return new Rect(x: 132.00f, y: 63.00f, width: 2172.00f, height: 1062.00f);
-        #endif
-        
-        return Screen.safeArea;
     }
 
     ////////////////
