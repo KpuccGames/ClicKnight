@@ -8,8 +8,6 @@ public class Enemy : Character
     [Header("Canvas")]
     public TextMeshProUGUI m_EnemyHealthText;
 
-    public ElementType EnemyType { get; private set; }
-
     private EnemyData m_EnemyData;
     private PlayerHero m_PlayerHero;
 

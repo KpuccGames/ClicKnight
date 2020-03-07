@@ -7,9 +7,6 @@ public class PlayerHero : Character
     [Header("Canvas")]
     public TextMeshProUGUI m_PlayerHealth;
 
-    public ElementType HeroAttackType { get; private set; }
-    public ElementType HeroDefenseType { get; private set; }
-
     private Enemy m_TargetEnemy;
 
     public event Action OnPlayerDied;
@@ -20,6 +17,7 @@ public class PlayerHero : Character
         // setup персонажа игрока
         AttackPower = PlayerProfile.Instance.GetDamage();
         Health = PlayerProfile.Instance.GetHealth();
+        m_MaxHealth = Health;
 
         m_PlayerHealth.text = Health.ToString();
     }

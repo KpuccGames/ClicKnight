@@ -15,6 +15,11 @@ public class Character : MonoBehaviour
     public int Health { get; protected set; }
     public float CriticalAttackChance { get; protected set; }
 
+    public ElementType AttackType { get; private set; }
+    public ElementType DefenseType { get; private set; }
+
+    protected int m_MaxHealth;
+
     //////////////
     public virtual void Attack()
     { }
@@ -29,5 +34,14 @@ public class Character : MonoBehaviour
         // в аргументах будет атакующий и защищающийся юнит
 
         return 1;
+    }
+
+    //////////////
+    public void ApplyHeal(int value)
+    {
+        Health += value;
+
+        if (Health > m_MaxHealth)
+            Health = m_MaxHealth;
     }
 }
