@@ -42,4 +42,15 @@ public class MaterialInfo : IItem
     {
         return Data.GetIcon();
     }
+
+    ////////////////
+    public void ApplyConsumeEffect(Character hero)
+    {
+        switch (Data.ConsumeEffect)
+        {
+            case ConsumeEffect.Heal:
+                hero.ApplyHeal(Data.ConsumeValue);
+                break;
+        }
+    }
 }

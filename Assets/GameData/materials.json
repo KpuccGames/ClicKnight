@@ -1,1 +1,1 @@
-[{"name":"apple","icon":"Art/icons/TestItems/apple"},{"name":"gem","icon":"Art/icons/TestItems/gem"},{"name":"ingot","icon":"Art/icons/TestItems/ingot"}]
+[{"name":"apple","icon":"Art/icons/TestItems/apple","consume_effect":"Heal","consume_value":5},{"name":"gem","icon":"Art/icons/TestItems/gem","consume_effect":"None","consume_value":0},{"name":"ingot","icon":"Art/icons/TestItems/ingot","consume_effect":"None","consume_value":0},{"name":"healing_potion","icon":"Art/icons/TestItems/hp","consume_effect":"Heal","consume_value":20}]

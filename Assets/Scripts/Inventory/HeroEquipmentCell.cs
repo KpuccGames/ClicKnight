@@ -30,6 +30,7 @@ public class HeroEquipmentCell : MonoBehaviour, IPointerClickHandler
     //////////////
     public void OnPointerClick(PointerEventData eventData)
     {
+        // TODO переделать реализацию, так как на девайсе так не прокатит
         int clickCount = eventData.clickCount;
 
         if (clickCount != 2 || m_EquipmentItem == null)

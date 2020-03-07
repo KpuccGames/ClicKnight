@@ -19,6 +19,9 @@ public class BattleManager : MonoBehaviour
     public RectTransform m_TapEvadePrefabsPlaceMask;
     public AbilityTapEvadePrefab m_TapPrefab;
 
+    [Header("Pockets")]
+    public BattlePocket[] m_Pockets;
+
     private Enemy m_EnemyCharacter;
     private Coroutine m_AbilityCastingCoroutine;
 
@@ -60,8 +63,13 @@ public class BattleManager : MonoBehaviour
     //////////////
     private void Start()
     {
-        // инициализация персонажа игрока (из PlayerPrefs?)
         SpawnEnemy();
+
+        // инициализация содержимого карманов
+        for (int i = 0; i < m_Pockets.Length; i++)
+        {
+            m_Pockets[i].SetupPocket(PlayerProfile.Instance.PocketItems[i], m_PlayerHero);
+        }
 
         RefreshStageCounter();
     }
@@ -129,6 +137,8 @@ public class BattleManager : MonoBehaviour
     //////////////
     private IEnumerator SpawningProcess()
     {
+        // TODO переделать реализацию, чтобы не приходилось уничтожать объект и создавать заново
+
         m_EnemyCharacter = null;
 
         EnemyData enemy = m_CurrentMission.GetEnemy(m_CurrentStage);
