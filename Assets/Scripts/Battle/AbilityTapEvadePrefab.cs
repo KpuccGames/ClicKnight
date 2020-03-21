@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class AbilityTapEvadePrefab : MonoBehaviour
 {
@@ -45,7 +46,7 @@ public class AbilityTapEvadePrefab : MonoBehaviour
     }
 
     /////////////////
-    private void OnEnemyDied(EnemyData enemy)
+    private void OnEnemyDied()
     {
         if (m_ProcessCoroutine != null)
         {

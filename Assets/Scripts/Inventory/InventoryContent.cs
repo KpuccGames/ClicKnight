@@ -59,7 +59,16 @@ public class InventoryContent
     }
 
     /////////////////
-    public void AddMaterial(MaterialData material)
+    public void AddMaterial(string materialName, int amount = 1)
+    {
+        MaterialData material = GameDataStorage.Instance.GetMaterialByName(materialName);
+
+        if (material != null)
+            AddMaterial(material, amount);
+    }
+
+    /////////////////
+    public void AddMaterial(MaterialData material, int amount = 1)
     {
         if (material == null)
             return;
@@ -68,17 +77,19 @@ public class InventoryContent
 
         foreach (MaterialInfo materialInfo in PlayerMaterials)
         {
+            // если в инвентаре есть такой материал, то добавляем
             if (materialInfo.Data.Name == material.Name)
             {
-                materialInfo.AddMaterial(1);
+                materialInfo.AddMaterial(amount);
                 materialToAdd = materialInfo;
                 break;
             }
         }
 
+        // если материала в инвентаре не было, то создаем и прибавляем
         if (materialToAdd == null)
         {
-            materialToAdd = new MaterialInfo(material, 1);
+            materialToAdd = new MaterialInfo(material, amount);
             PlayerMaterials.Add(materialToAdd);
         }
 
@@ -110,6 +121,47 @@ public class InventoryContent
             if (OnInventoryContentChanged != null)
                 OnInventoryContentChanged(item);
         }
+    }
+
+    /////////////////
+    private MaterialInfo GetMaterialInfo(MaterialData data)
+    {
+        if (data == null)
+            return null;
+
+        MaterialInfo info = PlayerMaterials.Find((mat) => mat.Data.Name.Equals(data.Name));
+
+        return info;
+    }
+
+    /////////////////
+    public bool TryRemoveMaterial(MaterialData data, int amount)
+    {
+        MaterialInfo info = GetMaterialInfo(data);
+
+        if (info == null)
+            return false;
+
+        if (info.TryRemoveMaterial(amount))
+        {
+            if (info.Amount <= 0)
+                PlayerMaterials.Remove(info);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /////////////////
+    public int GetMaterialAmount(MaterialData data)
+    {
+        MaterialInfo info = GetMaterialInfo(data);
+
+        if (info == null)
+            return 0;
+
+        return info.Amount;
     }
 
     /////////////////

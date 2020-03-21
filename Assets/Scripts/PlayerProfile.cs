@@ -19,8 +19,8 @@ public class PlayerProfile
 
     public int Health { get; private set; }
     public int BaseDamage { get; private set; }
-    public int Armor { get; private set; }
-    public Dictionary<EquipmentSlot, EquipmentItem> HeroEquipment { get; private set; }
+    public Dictionary<EquipmentSlot, EquipmentItem> HeroEquipment { get; private set; } = new Dictionary<EquipmentSlot, EquipmentItem>();
+    public MaterialInfo[] PocketItems { get; private set; } = new MaterialInfo[4];
 
     public int NormalWorldMissionNumber { get; private set; }
     public int FireWorldMissionNumber { get; private set; }
@@ -45,10 +45,6 @@ public class PlayerProfile
         DarknessWorldMissionNumber = json.GetInt(Constants.DarknessWorldMissionNumber);
 
         HeroEquipment = new Dictionary<EquipmentSlot, EquipmentItem>();
-
-        string equipName = (string)json["base_weapon"];
-        EquipmentItem equip = GameDataStorage.Instance.GetEquipmentByName(equipName);
-        HeroEquipment.Add(equip.Slot, equip);
     }
 
     ///////////////
@@ -65,16 +61,16 @@ public class PlayerProfile
     }
 
     ///////////////
-    public int GetArmor()
+    public int GetHealth()
     {
-        int armor = Armor;
+        int health = Health;
 
         foreach (EquipmentItem equipment in HeroEquipment.Values)
         {
-            armor += equipment.ArmorBonus;
+            health += equipment.HealthBonus;
         }
 
-        return armor;
+        return health;
     }
 
     ///////////////
@@ -124,12 +120,58 @@ public class PlayerProfile
         switch (completedMission.World)
         {
             case MissionWorld.Normal:
-                if (completedMission.Number == NormalWorldMissionNumber)
+                int number = completedMission.Number;
+
+                // если первый раз прошли миссию
+                if (number == NormalWorldMissionNumber)
+                {
                     NormalWorldMissionNumber++;
+
+                    // 
+                    // NOTE: имитация туториала, потом привести в нормальный вид
+                    //
+                    switch (number)
+                    {
+                        case 2:
+                            InventoryContent.Instance.AddEquipmentItem("axe");
+                            break;
+
+                        case 3:
+                            InventoryContent.Instance.AddMaterial("ingot", 15);
+                            break;
+                    }
+                }
                 break;
         }
 
         GameManager.Instance.SaveGame();
+    }
+
+    ///////////////
+    public void AddItemInPocket(MaterialData data)
+    {
+        if (!InventoryContent.Instance.TryRemoveMaterial(data, 1))
+            return;
+
+        for (int i = 0; i < PocketItems.Length; i++)
+        {
+            if (PocketItems[i] == null)
+            {
+                PocketItems[i] = new MaterialInfo(data, 1);
+                break;
+            }
+        }
+    }
+
+    ///////////////
+    public void RemoveItemFromPocket(int pocketNumber)
+    {
+        if (PocketItems[pocketNumber] == null)
+            return;
+
+        InventoryContent.Instance.AddMaterial(PocketItems[pocketNumber].Data);
+
+        PocketItems[pocketNumber] = null;
     }
 
     //Utils//
@@ -138,10 +180,8 @@ public class PlayerProfile
     public void LoadProfile(JsonObject json)
     {
         InitBaseStats(GameDataStorage.Instance.NewProfileData);
-        HeroEquipment = new Dictionary<EquipmentSlot, EquipmentItem>();
 
-        // загружаем данные сохраненного профиля
-
+        // экипировка героя
         JsonArray heroEquipments = json.Get<JsonArray>("hero_equipment");
 
         foreach (JsonObject obj in heroEquipments)
@@ -150,6 +190,21 @@ public class PlayerProfile
 
             HeroEquipment.Add((EquipmentSlot)obj.GetInt("Slot"), item);
         }
+
+        // содержимое карманов
+        JsonArray pocketItems = json.Get<JsonArray>("pocket_items");
+
+        for (int i = 0; i < pocketItems.Count; i++)
+        {
+            if (pocketItems[i] == null)
+                continue;
+
+            MaterialData itemData = GameDataStorage.Instance.GetMaterialByName((string)pocketItems[i]);
+
+            PocketItems[i] = new MaterialInfo(itemData, 1);
+        }
+
+        // прогресс по миссиям
 
         NormalWorldMissionNumber = json.GetInt("Normal");
         WaterWorldMissionNumber = json.GetInt("Water");
@@ -173,7 +228,17 @@ public class PlayerProfile
         }
 
         profileDataToSave.Add("hero_equipment", heroEquipmentArray);
-        
+
+        // сохраняем содержимое карманов
+        JsonArray pocketsItems = new JsonArray();
+
+        for (int i = 0; i < PocketItems.Length; i++)
+        {
+            pocketsItems.Add(PocketItems[i].Data.Name);
+        }
+
+        profileDataToSave.Add("pocket_items", pocketsItems);
+
         // сохраняем прогресс игрока
         profileDataToSave.Add("Normal", NormalWorldMissionNumber);
         profileDataToSave.Add("Water", WaterWorldMissionNumber);
@@ -192,7 +257,6 @@ public class PlayerProfile
 
         Health = json.GetInt("health");
         BaseDamage = json.GetInt("damage");
-        Armor = json.GetInt("armor");
 
         // подписка на ивент обновления прогресса
         BattleManager.OnMissionComplete += TryUpdateProgress;

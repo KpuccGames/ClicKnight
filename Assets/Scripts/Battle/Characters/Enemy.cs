@@ -8,8 +8,6 @@ public class Enemy : Character
     [Header("Canvas")]
     public TextMeshProUGUI m_EnemyHealthText;
 
-    public ElementType EnemyType { get; private set; }
-
     private EnemyData m_EnemyData;
     private PlayerHero m_PlayerHero;
 
@@ -17,7 +15,7 @@ public class Enemy : Character
     private DateTime m_AbilityCastedLastTime = DateTime.MinValue;
     private Coroutine m_AbilityCastingProcess;
 
-    public static event Action<EnemyData> OnEnemyDeath;
+    public static event Action OnEnemyDeath;
 
     //////////////
     public void SetupEnemy(EnemyData data)
@@ -27,7 +25,6 @@ public class Enemy : Character
         Health = m_EnemyData.Health;
         AttackPower = m_EnemyData.Damage;
         CriticalAttackChance = 0;
-        Armor = 0;
 
         m_EnemyHealthText.text = Health.ToString();
 
@@ -75,8 +72,16 @@ public class Enemy : Character
                 m_AbilityCastingProcess = null;
             }
 
-            if (OnEnemyDeath != null)
-                OnEnemyDeath(m_EnemyData);
+            // дропаем предмет игроку
+            MaterialData droppedItem = m_EnemyData.TryDropItem();
+
+            if (droppedItem != null)
+            {
+                InventoryContent.Instance.AddMaterial(droppedItem);
+                Debug.Log("Dropped item " + droppedItem.Name);
+            }
+            
+            OnEnemyDeath?.Invoke();
 
             Destroy(gameObject);
         }
@@ -97,11 +102,6 @@ public class Enemy : Character
     private void TryStartCastAbility()
     {
         if (IsAbilityOnCooldown())
-            return;
-
-        bool isCasting = Helper.CheckChance01(.5f);
-
-        if (!isCasting)
             return;
 
         m_IsCastingAbility = true;

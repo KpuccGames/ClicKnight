@@ -1,1 +1,1 @@
-[{"name":"testAb","strikes":"10,20,30,40","reaction_time":"0,7","cooldown":5}]
+[{"name":"ghostAb","strikes":"5,5,7","reaction_time":"0,7","cooldown":5},{"name":"corruptedSpiritAb","strikes":"10,10,20","reaction_time":"0,7","cooldown":4},{"name":"bragusAb","strikes":"20,20,30","reaction_time":"0,8","cooldown":4}]

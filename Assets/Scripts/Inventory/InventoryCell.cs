@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,25 +8,40 @@ public class InventoryCell : MonoBehaviour, IPointerClickHandler
 {
     public Image m_Icon;
     public TextMeshProUGUI m_AmountText;
+    public Button m_EquipButton;
 
-    private EquipmentItem m_EquipmentItem;
-    private MaterialInfo m_MaterialItem;
+    private IItem m_Item;
+
+    public static event Action<IItem> OnItemSelected;
 
     //////////////
     public void OnPointerClick(PointerEventData eventData)
     {
-        int clickCount = eventData.clickCount;
+        OnItemSelected?.Invoke(m_Item);
 
-        if (clickCount != 2 || m_EquipmentItem == null)
+        if (m_Item == null)
             return;
 
-        PlayerProfile.Instance.EquipItem(m_EquipmentItem);
+        m_EquipButton.gameObject.SetActive(!m_EquipButton.gameObject.activeSelf);
+    }
+    
+    //////////////
+    public void OnClickEquip()
+    {
+        if (m_Item == null || m_Item.GetItemType() == ItemType.material)
+            return;
+
+        EquipmentItem equip = (EquipmentItem)m_Item;
+
+        PlayerProfile.Instance.EquipItem(equip);
+
+        m_EquipButton.gameObject.SetActive(false);
     }
 
     //////////////
     public void SetItem(IItem item)
     {
-        m_AmountText.gameObject.SetActive(false);
+        m_Item = item;
 
         if (item == null)
         {
@@ -36,20 +51,18 @@ public class InventoryCell : MonoBehaviour, IPointerClickHandler
         
         ItemType type = item.GetItemType();
 
+        SetItemIcon(item.GetIcon());
+
         if (type == ItemType.equipment)
         {
-            m_EquipmentItem = (EquipmentItem)item;
-
-            SetItemIcon(m_EquipmentItem.GetIcon());
+            m_AmountText.gameObject.SetActive(false);
         }
         else if (type == ItemType.material)
         {
-            m_MaterialItem = (MaterialInfo)item;
-
-            SetItemIcon(m_MaterialItem.GetIcon());
+            MaterialInfo material = (MaterialInfo)item;
 
             m_AmountText.gameObject.SetActive(true);
-            m_AmountText.text = m_MaterialItem.Amount.ToString();
+            m_AmountText.text = material.Amount.ToString();
         }
     }
 

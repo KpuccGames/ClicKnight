@@ -40,6 +40,17 @@ public class MaterialInfo : IItem
     ////////////////
     public Sprite GetIcon()
     {
-        return Resources.Load<Sprite>(Data.Icon);
+        return Data.GetIcon();
+    }
+
+    ////////////////
+    public void ApplyConsumeEffect(Character hero)
+    {
+        switch (Data.ConsumeEffect)
+        {
+            case ConsumeEffect.Heal:
+                hero.ApplyHeal(Data.ConsumeValue);
+                break;
+        }
     }
 }

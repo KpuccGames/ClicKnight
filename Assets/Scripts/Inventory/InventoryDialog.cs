@@ -1,22 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System.Text;
+using System.Collections.Generic;
 using UnityEngine;
-using SimpleJson;
+using TMPro;
 
 public class InventoryDialog : BaseDialog
 {
     public InventoryCell[] m_InventoryCells;
     public HeroEquipmentView m_EquipmentView;
+    public TextMeshProUGUI m_ItemStatsText;
 
     ////////////////
     private void OnEnable()
     {
         InventoryContent.OnInventoryContentChanged += UpdateView;
+        InventoryCell.OnItemSelected += UpdateSelectedItemInfo;
     }
 
     ////////////////
     private void OnDisable()
     {
         InventoryContent.OnInventoryContentChanged -= UpdateView;
+        InventoryCell.OnItemSelected -= UpdateSelectedItemInfo;
     }
 
     ////////////////
@@ -83,6 +87,12 @@ public class InventoryDialog : BaseDialog
 
             m_InventoryCells[i].SetItem(materials[i]);
         }
+    }
+
+    ////////////////
+    private void UpdateSelectedItemInfo(IItem item)
+    {
+        m_ItemStatsText.text = UIHelper.GetItemInformationText(item);
     }
 
     /////////////////

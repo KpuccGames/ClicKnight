@@ -21,7 +21,7 @@ public class EquipmentItem : IItem
 {
     public string Name { get; private set; }
     public int AttackBonus { get; private set; }
-    public int ArmorBonus { get; private set; }
+    public int HealthBonus { get; private set; }
     public EquipmentSlot Slot { get; private set; }
 
     private string m_IconPath;
@@ -31,7 +31,7 @@ public class EquipmentItem : IItem
     {
         Name = (string)json["name"];
         AttackBonus = json.GetInt("damage");
-        ArmorBonus = json.GetInt("armor");
+        HealthBonus = json.GetInt("health");
         m_IconPath = (string)json["icon"];
         Slot = Helper.ParseEnum((string)json["slot"], EquipmentSlot.unknown);
     }

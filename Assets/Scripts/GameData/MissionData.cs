@@ -1,5 +1,6 @@
 ﻿using SimpleJson;
 using System.Collections.Generic;
+using UnityEngine;
 
 public enum MissionWorld
 {
@@ -14,9 +15,13 @@ public enum MissionWorld
 public class MissionData
 {
     public int Number { get; private set; }
-    public List<EnemyData> Enemies { get; private set; }
+    public List<EnemyData> NormalEnemies { get; private set; }
+    public List<EnemyData> EliteEnemies { get; private set; }
+    public List<EnemyData> BossEnemies { get; private set; }
     public int Waves { get; private set; }
     public MissionWorld World { get; private set; }
+
+    private int m_ElitePeriod;
 
     ///////////////
     public MissionData(JsonObject json)
@@ -24,14 +29,76 @@ public class MissionData
         Number = json.GetInt("number");
         Waves = json.GetInt("waves");
         World = (MissionWorld)json.GetInt("world");
+        m_ElitePeriod = json.GetInt("elite_period");
 
-        Enemies = new List<EnemyData>();
+        NormalEnemies = new List<EnemyData>();
+        EliteEnemies = new List<EnemyData>();
+        BossEnemies = new List<EnemyData>();
 
         string[] enemiesList = json.GetString("enemies", string.Empty).Split(',');
 
         foreach (string enemyName in enemiesList)
         {
-            Enemies.Add(GameDataStorage.Instance.GetEnemyByName(enemyName));
+            EnemyData enemy = GameDataStorage.Instance.GetEnemyByName(enemyName);
+
+            if (enemy == null)
+            {
+                Debug.LogWarning("Null EnemyData in " + World + " mission number: " + Number);
+                continue;
+            }
+
+            switch (enemy.Type)
+            {
+                case EnemyType.Normal:
+                    NormalEnemies.Add(enemy);
+                    break;
+
+                case EnemyType.Elite:
+                    EliteEnemies.Add(enemy);
+                    break;
+
+                case EnemyType.Boss:
+                    BossEnemies.Add(enemy);
+                    break;
+            }
+
+        }
+    }
+
+    ///////////////
+    public EnemyData GetEnemy(int stageNum)
+    {
+        EnemyData enemyToReturn = null;
+
+        if (BossEnemies.Count > 0 && stageNum == Waves)
+        {
+            enemyToReturn = BossEnemies[0]; // босс  миссии подразумевается только один
+        }
+        else if (m_ElitePeriod > 0 && stageNum % m_ElitePeriod == 0)
+        {
+            int rand = Random.Range(0, EliteEnemies.Count);
+
+            enemyToReturn = EliteEnemies[rand];
+        }
+        else
+        {
+            int rand = Random.Range(0, NormalEnemies.Count);
+
+            enemyToReturn = NormalEnemies[rand];
+        }
+
+        if (enemyToReturn != null)
+            return enemyToReturn;
+        else // кусок для отслежавния ошибки
+        {
+            Debug.LogError("Enemy generation error!");
+
+            if (NormalEnemies.Count > 0)
+                return NormalEnemies[0];
+            else if (EliteEnemies.Count > 0)
+                return EliteEnemies[0];
+            else
+                return BossEnemies[0];
         }
     }
 }
