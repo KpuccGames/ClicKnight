@@ -16,7 +16,7 @@ public class CraftRecipeItem : MonoBehaviour
     {
         m_Recipe = data;
 
-        if (m_Recipe.CraftItemType == ItemType.equipment)
+        if (m_Recipe.CraftItemType == ItemType.Equipment)
         {
             EquipmentItem item = GameDataStorage.Instance.GetEquipmentByName(m_Recipe.CraftItemName);
 

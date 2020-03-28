@@ -45,6 +45,6 @@ public class EquipmentItem : IItem
     /////////////////
     public ItemType GetItemType()
     {
-        return ItemType.equipment;
+        return ItemType.Equipment;
     }
 }

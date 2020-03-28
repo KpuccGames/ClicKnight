@@ -4,8 +4,8 @@ using UnityEngine;
 
 public enum ItemType
 {
-    equipment = 0,
-    material = 1
+    Equipment = 0,
+    Material = 1
 }
 
 public interface IItem

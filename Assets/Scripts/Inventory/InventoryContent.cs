@@ -92,9 +92,8 @@ public class InventoryContent
             materialToAdd = new MaterialInfo(material, amount);
             PlayerMaterials.Add(materialToAdd);
         }
-
-        if (OnInventoryContentChanged != null)
-            OnInventoryContentChanged(materialToAdd);
+        
+        OnInventoryContentChanged?.Invoke(materialToAdd);
     }
 
     /////////////////
@@ -118,8 +117,7 @@ public class InventoryContent
             // интереснее в конце уровня показать полученный дроп
             //
 
-            if (OnInventoryContentChanged != null)
-                OnInventoryContentChanged(item);
+            OnInventoryContentChanged?.Invoke(item);
         }
     }
 
@@ -147,6 +145,8 @@ public class InventoryContent
             if (info.Amount <= 0)
                 PlayerMaterials.Remove(info);
 
+            OnInventoryContentChanged?.Invoke(info);
+
             return true;
         }
 
@@ -173,8 +173,7 @@ public class InventoryContent
             {
                 PlayerEquipments.Remove(item);
 
-                if (OnInventoryContentChanged != null)
-                    OnInventoryContentChanged(itemToRemove);
+                OnInventoryContentChanged?.Invoke(itemToRemove);
 
                 return;
             }

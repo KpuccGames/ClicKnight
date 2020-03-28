@@ -68,7 +68,7 @@ public class BattleManager : MonoBehaviour
         // инициализация содержимого карманов
         for (int i = 0; i < m_Pockets.Length; i++)
         {
-            m_Pockets[i].SetupPocket(PlayerProfile.Instance.PocketItems[i], m_PlayerHero);
+            m_Pockets[i].SetupPocket(PlayerProfile.Instance.PocketItems[i], m_PlayerHero, i);
         }
 
         RefreshStageCounter();

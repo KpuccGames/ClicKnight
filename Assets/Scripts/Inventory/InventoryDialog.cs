@@ -13,14 +13,14 @@ public class InventoryDialog : BaseDialog
     private void OnEnable()
     {
         InventoryContent.OnInventoryContentChanged += UpdateView;
-        InventoryCell.OnItemSelected += UpdateSelectedItemInfo;
+        InventoryCell.OnItemCellClicked += UpdateSelectedItemInfo;
     }
 
     ////////////////
     private void OnDisable()
     {
         InventoryContent.OnInventoryContentChanged -= UpdateView;
-        InventoryCell.OnItemSelected -= UpdateSelectedItemInfo;
+        InventoryCell.OnItemCellClicked -= UpdateSelectedItemInfo;
     }
 
     ////////////////
@@ -43,7 +43,7 @@ public class InventoryDialog : BaseDialog
     ////////////////
     private void UpdateView(IItem item)
     {
-        if (item.GetItemType() == ItemType.equipment)
+        if (item.GetItemType() == ItemType.Equipment)
         {
             ShowEquipments();
         }

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 
 public enum ElementType
 {
@@ -19,6 +20,8 @@ public class Character : MonoBehaviour
     public ElementType DefenseType { get; private set; }
 
     protected int m_MaxHealth;
+
+    public static event Action OnHealApplied;
 
     //////////////
     public virtual void Attack()
@@ -43,5 +46,7 @@ public class Character : MonoBehaviour
 
         if (Health > m_MaxHealth)
             Health = m_MaxHealth;
+
+        OnHealApplied?.Invoke();
     }
 }

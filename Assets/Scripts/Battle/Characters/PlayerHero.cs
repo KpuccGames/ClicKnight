@@ -10,7 +10,19 @@ public class PlayerHero : Character
     private Enemy m_TargetEnemy;
 
     public event Action OnPlayerDied;
-    
+
+    //////////////
+    private void OnEnable()
+    {
+        OnHealApplied += UpdateHeroHealthText;
+    }
+
+    //////////////
+    private void OnDisable()
+    {
+        OnHealApplied -= UpdateHeroHealthText;
+    }
+
     //////////////
     private void Start()
     {
@@ -37,7 +49,7 @@ public class PlayerHero : Character
         if (Health < 0)
             Health = 0;
 
-        m_PlayerHealth.text = Health.ToString();
+        UpdateHeroHealthText();
 
         // после применения урона проверяем, не погиб ли персонаж
         if (Health <= 0)
@@ -59,5 +71,11 @@ public class PlayerHero : Character
     public void SetEnemy(Enemy enemy)
     {
         m_TargetEnemy = enemy;
+    }
+
+    //////////////
+    private void UpdateHeroHealthText()
+    {
+        m_PlayerHealth.text = Health.ToString();
     }
 }

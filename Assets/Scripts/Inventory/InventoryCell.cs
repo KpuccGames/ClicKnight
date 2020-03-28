@@ -8,34 +8,43 @@ public class InventoryCell : MonoBehaviour, IPointerClickHandler
 {
     public Image m_Icon;
     public TextMeshProUGUI m_AmountText;
-    public Button m_EquipButton;
+    public Button m_CellButton;
 
     private IItem m_Item;
 
-    public static event Action<IItem> OnItemSelected;
+    public static event Action<IItem> OnItemCellClicked;
 
     //////////////
     public void OnPointerClick(PointerEventData eventData)
     {
-        OnItemSelected?.Invoke(m_Item);
+        OnItemCellClicked?.Invoke(m_Item);
 
         if (m_Item == null)
             return;
 
-        m_EquipButton.gameObject.SetActive(!m_EquipButton.gameObject.activeSelf);
+        m_CellButton.gameObject.SetActive(!m_CellButton.gameObject.activeSelf);
     }
     
     //////////////
-    public void OnClickEquip()
+    public void OnClickCellButton()
     {
-        if (m_Item == null || m_Item.GetItemType() == ItemType.material)
+        if (m_Item == null)
             return;
 
-        EquipmentItem equip = (EquipmentItem)m_Item;
+        if (m_Item.GetItemType() == ItemType.Material)
+        {
+            MaterialInfo materialInfo = (MaterialInfo)m_Item;
 
-        PlayerProfile.Instance.EquipItem(equip);
+            PlayerProfile.Instance.AddItemToPocket(materialInfo.Data);
+        }
+        else
+        {
+            EquipmentItem equip = (EquipmentItem)m_Item;
 
-        m_EquipButton.gameObject.SetActive(false);
+            PlayerProfile.Instance.EquipItem(equip);
+        }
+
+        m_CellButton.gameObject.SetActive(false);
     }
 
     //////////////
@@ -53,11 +62,11 @@ public class InventoryCell : MonoBehaviour, IPointerClickHandler
 
         SetItemIcon(item.GetIcon());
 
-        if (type == ItemType.equipment)
+        if (type == ItemType.Equipment)
         {
             m_AmountText.gameObject.SetActive(false);
         }
-        else if (type == ItemType.material)
+        else if (type == ItemType.Material)
         {
             MaterialInfo material = (MaterialInfo)item;
 

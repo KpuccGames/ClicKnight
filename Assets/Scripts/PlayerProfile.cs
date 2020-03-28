@@ -148,7 +148,7 @@ public class PlayerProfile
     }
 
     ///////////////
-    public void AddItemInPocket(MaterialData data)
+    public void AddItemToPocket(MaterialData data)
     {
         if (!InventoryContent.Instance.TryRemoveMaterial(data, 1))
             return;
@@ -164,12 +164,18 @@ public class PlayerProfile
     }
 
     ///////////////
-    public void RemoveItemFromPocket(int pocketNumber)
+    public void RemoveItemFromPocket(int pocketNumber, bool isUsed)
     {
+        if (pocketNumber < 0 || pocketNumber >= PocketItems.Length)
+            return;
+
         if (PocketItems[pocketNumber] == null)
             return;
 
-        InventoryContent.Instance.AddMaterial(PocketItems[pocketNumber].Data);
+        if (!isUsed)
+        {
+            InventoryContent.Instance.AddMaterial(PocketItems[pocketNumber].Data);
+        }
 
         PocketItems[pocketNumber] = null;
     }
@@ -234,6 +240,9 @@ public class PlayerProfile
 
         for (int i = 0; i < PocketItems.Length; i++)
         {
+            if (PocketItems[i] == null)
+                continue;
+
             pocketsItems.Add(PocketItems[i].Data.Name);
         }
 

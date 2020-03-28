@@ -34,7 +34,7 @@ public class MaterialInfo : IItem
     ////////////////
     public ItemType GetItemType()
     {
-        return ItemType.material;
+        return ItemType.Material;
     }
 
     ////////////////

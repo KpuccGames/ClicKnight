@@ -49,7 +49,7 @@ public class CraftingDialog : BaseDialog
         IItem craftItem = null;
 
         // определяем тип предмета
-        if (m_CurrentRecipe.CraftItemType == ItemType.equipment)
+        if (m_CurrentRecipe.CraftItemType == ItemType.Equipment)
         {
             craftItem = GameDataStorage.Instance.GetEquipmentByName(m_CurrentRecipe.CraftItemName);
         }
@@ -95,7 +95,7 @@ public class CraftingDialog : BaseDialog
         InventoryContent.Instance.TryRemoveMaterial(ingredient2, m_CurrentRecipe.Ingredient2Amount);
 
         // добавляем изготовленный предмет
-        if (m_CurrentRecipe.CraftItemType == ItemType.equipment)
+        if (m_CurrentRecipe.CraftItemType == ItemType.Equipment)
             InventoryContent.Instance.AddEquipmentItem(m_CurrentRecipe.CraftItemName);
         else
             InventoryContent.Instance.AddMaterial(m_CurrentRecipe.CraftItemName);

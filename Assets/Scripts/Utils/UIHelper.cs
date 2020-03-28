@@ -14,7 +14,7 @@ public static class UIHelper
 
         StringBuilder sb = new StringBuilder();
 
-        if (item.GetItemType() == ItemType.equipment)
+        if (item.GetItemType() == ItemType.Equipment)
         {
             EquipmentItem equipment = (EquipmentItem)item;
 
