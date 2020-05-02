@@ -77,7 +77,7 @@ public class Enemy : Character
 
             if (droppedItem != null)
             {
-                InventoryContent.Instance.AddMaterial(droppedItem);
+                Inventory.Instance.AddMaterial(droppedItem);
                 Debug.Log("Dropped item " + droppedItem.Name);
             }
             
@@ -113,7 +113,7 @@ public class Enemy : Character
     //////////////
     private IEnumerator StartCastAbility()
     {
-        AbilityData ability = GameDataStorage.Instance.GetAbilityByName(m_EnemyData.Ability);
+        AbilityData ability = AbilitiesDataStorage.Instance.GetByName(m_EnemyData.Ability);
 
         for (int i = 0; i < ability.Strikes.Length; i++)
         {
@@ -128,7 +128,7 @@ public class Enemy : Character
     //////////////
     private bool IsAbilityOnCooldown()
     {
-        AbilityData ability = GameDataStorage.Instance.GetAbilityByName(m_EnemyData.Ability);
+        AbilityData ability = AbilitiesDataStorage.Instance.GetByName(m_EnemyData.Ability);
 
         if (ability == null)
             return true;

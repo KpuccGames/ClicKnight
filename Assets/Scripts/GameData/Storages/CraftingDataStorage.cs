@@ -1,8 +1,8 @@
 ﻿using SimpleJson;
 
-public class CraftingData
+public class CraftingData : IDataStorageObject
 {
-    public string CraftItemName { get; private set; }
+    public string Name { get; private set; }
     public string Ingredient1 { get; private set; }
     public int Ingredient1Amount { get; private set; }
     public string Ingredient2 { get; private set; }
@@ -10,9 +10,9 @@ public class CraftingData
     public ItemType CraftItemType { get; private set; }
 
     ////////////////
-    public CraftingData(JsonObject json)
+    public void Init(JsonObject json)
     {
-        CraftItemName = (string)json["name"];
+        Name = (string)json["name"];
         
         //
         //TODO ингредиенты сделать списком
@@ -22,10 +22,15 @@ public class CraftingData
         Ingredient2 = json.GetString("ingredient_2", string.Empty);
 
         if (Ingredient1.Equals(Ingredient2))
-            UnityEngine.Debug.LogError("Duplicate ingredients in recipe: " + CraftItemName);
+            UnityEngine.Debug.LogError("Duplicate ingredients in recipe: " + Name);
 
         Ingredient1Amount = json.GetInt("ingredient_1_amount");
         Ingredient2Amount = json.GetInt("ingredient_2_amount", 0);
         CraftItemType = (ItemType)json.GetInt("item_type");
     }
+}
+
+public class CraftingDataStorage : BaseDataStorage<CraftingData, CraftingDataStorage>
+{
+    public CraftingDataStorage() : base("crafting") { }
 }

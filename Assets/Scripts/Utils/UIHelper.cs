@@ -16,7 +16,7 @@ public static class UIHelper
 
         if (item.GetItemType() == ItemType.Equipment)
         {
-            EquipmentItem equipment = (EquipmentItem)item;
+            EquipmentData equipment = ((EquipmentInfo)item).Data;
 
             sb.AppendLine(equipment.Name);
             sb.AppendLine("Attack: " + equipment.AttackBonus);

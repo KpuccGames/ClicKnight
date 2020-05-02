@@ -10,6 +10,5 @@ public enum ItemType
 
 public interface IItem
 {
-    Sprite GetIcon();
     ItemType GetItemType();
 }

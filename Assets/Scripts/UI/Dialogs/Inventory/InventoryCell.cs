@@ -39,7 +39,7 @@ public class InventoryCell : MonoBehaviour, IPointerClickHandler
         }
         else
         {
-            EquipmentItem equip = (EquipmentItem)m_Item;
+            EquipmentData equip = ((EquipmentInfo)m_Item).Data;
 
             PlayerProfile.Instance.EquipItem(equip);
         }
@@ -59,16 +59,18 @@ public class InventoryCell : MonoBehaviour, IPointerClickHandler
         }
         
         ItemType type = item.GetItemType();
-
-        SetItemIcon(item.GetIcon());
-
+        
         if (type == ItemType.Equipment)
         {
             m_AmountText.gameObject.SetActive(false);
+
+            SetItemIcon(((EquipmentInfo)item).Data.GetIcon());
         }
         else if (type == ItemType.Material)
         {
             MaterialInfo material = (MaterialInfo)item;
+
+            SetItemIcon(material.Data.GetIcon());
 
             m_AmountText.gameObject.SetActive(true);
             m_AmountText.text = material.Amount.ToString();

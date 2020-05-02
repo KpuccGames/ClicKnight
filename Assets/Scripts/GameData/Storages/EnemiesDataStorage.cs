@@ -15,9 +15,9 @@ public enum EnemyType
     Boss = 2
 }
 
-public class EnemyData
+public class EnemyData : IDataStorageObject
 {
-    public string Name { get; private set; }
+    public string Name { get; set; }
     public string Prefab { get; private set; }
     public AttackType AttackType { get; private set; }
     public EnemyType Type { get; private set; }
@@ -28,7 +28,7 @@ public class EnemyData
     public string Ability { get; private set; }
 
     ///////////////
-    public EnemyData(JsonObject json)
+    public void Init(JsonObject json)
     {
         Name = (string)json["name"];
         Prefab = (string)json["prefab"];
@@ -43,7 +43,7 @@ public class EnemyData
 
         foreach (string drop in dropList)
         {
-            Drops.Add(GameDataStorage.Instance.GetDropByName(drop));
+            Drops.Add(DropsDataStorage.Instance.GetByName(drop));
         }
 
         Ability = (string)json["ability"];
@@ -71,7 +71,7 @@ public class EnemyData
         }
         else if (droppedItems.Count == 1)
         {
-            return GameDataStorage.Instance.GetMaterialByName(droppedItems[0].MaterialDropName);
+            return MaterialsDataStorage.Instance.GetByName(droppedItems[0].MaterialDropName);
         }
         else
         {
@@ -89,7 +89,7 @@ public class EnemyData
                     lowestChanceItem = drop;
             }
 
-            return GameDataStorage.Instance.GetMaterialByName(lowestChanceItem.MaterialDropName);
+            return MaterialsDataStorage.Instance.GetByName(lowestChanceItem.MaterialDropName);
         }
     }
 
@@ -98,4 +98,9 @@ public class EnemyData
     {
         return Resources.Load<GameObject>(Prefab);
     }
+}
+
+public class EnemiesDataStorage : BaseDataStorage<EnemyData, EnemiesDataStorage>
+{
+    public EnemiesDataStorage() : base("enemies") { }
 }

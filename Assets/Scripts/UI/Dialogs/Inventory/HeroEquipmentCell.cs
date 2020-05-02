@@ -7,10 +7,10 @@ public class HeroEquipmentCell : MonoBehaviour, IPointerClickHandler
     public EquipmentSlot m_EquipmentSlot;
     public Image m_EquipmentIcon;
 
-    private EquipmentItem m_EquipmentItem;
+    private EquipmentData m_EquipmentItem;
 
     ////////////////
-    public void SetItem(EquipmentItem item)
+    public void SetItem(EquipmentData item)
     {
         if (item == null)
         {

@@ -23,7 +23,7 @@ public class HeroEquipmentView : MonoBehaviour
     {
         foreach (HeroEquipmentCell cell in m_EquipmentCells)
         {
-            EquipmentItem item;
+            EquipmentData item;
 
             if (PlayerProfile.Instance.HeroEquipment.TryGetValue(cell.m_EquipmentSlot, out item))
                 cell.SetItem(item);

@@ -17,7 +17,7 @@ public enum EquipmentSlot
     count = 8
 }
 
-public class EquipmentItem : IItem
+public class EquipmentData : IDataStorageObject
 {
     public string Name { get; private set; }
     public int AttackBonus { get; private set; }
@@ -27,7 +27,7 @@ public class EquipmentItem : IItem
     private string m_IconPath;
 
     /////////////////
-    public EquipmentItem(JsonObject json)
+    public void Init(JsonObject json)
     {
         Name = (string)json["name"];
         AttackBonus = json.GetInt("damage");
@@ -41,10 +41,9 @@ public class EquipmentItem : IItem
     {
         return Resources.Load<Sprite>(m_IconPath);
     }
+}
 
-    /////////////////
-    public ItemType GetItemType()
-    {
-        return ItemType.Equipment;
-    }
+public class EquipmentsDataStorage : BaseDataStorage<EquipmentData, EquipmentsDataStorage>
+{
+    public EquipmentsDataStorage() : base("equipments") { }
 }

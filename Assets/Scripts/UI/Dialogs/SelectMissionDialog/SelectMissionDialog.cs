@@ -23,7 +23,7 @@ public class SelectMissionDialog : BaseDialog
         if (m_IsInited)
             return;
 
-        List<MissionData> missions = GameDataStorage.Instance.Missions;
+        List<MissionData> missions = MissionsDataStorage.Instance.GetData();
 
         missions.Sort((a, b) =>
         {

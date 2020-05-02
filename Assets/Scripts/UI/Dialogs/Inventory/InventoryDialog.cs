@@ -12,14 +12,14 @@ public class InventoryDialog : BaseDialog
     ////////////////
     private void OnEnable()
     {
-        InventoryContent.OnInventoryContentChanged += UpdateView;
+        Inventory.OnInventoryContentChanged += UpdateView;
         InventoryCell.OnItemCellClicked += UpdateSelectedItemInfo;
     }
 
     ////////////////
     private void OnDisable()
     {
-        InventoryContent.OnInventoryContentChanged -= UpdateView;
+        Inventory.OnInventoryContentChanged -= UpdateView;
         InventoryCell.OnItemCellClicked -= UpdateSelectedItemInfo;
     }
 
@@ -56,7 +56,7 @@ public class InventoryDialog : BaseDialog
     ////////////////
     public void ShowEquipments()
     {
-        List<EquipmentItem> items = InventoryContent.Instance.PlayerEquipments;
+        List<EquipmentInfo> items = Inventory.Instance.PlayerEquipments;
 
         for (int i = 0; i < m_InventoryCells.Length; i++)
         {
@@ -74,7 +74,7 @@ public class InventoryDialog : BaseDialog
     ////////////////
     public void ShowMaterials()
     {
-        List<MaterialInfo> materials = InventoryContent.Instance.PlayerMaterials;
+        List<MaterialInfo> materials = Inventory.Instance.PlayerMaterials;
 
         for (int i = 0; i < (m_InventoryCells.Length); i++)
         {
@@ -98,10 +98,11 @@ public class InventoryDialog : BaseDialog
     /////////////////
     public void CheatAddItem()
     {
-        int index = Random.Range(0, GameDataStorage.Instance.Equipments.Count);
+        List<EquipmentData> datas = EquipmentsDataStorage.Instance.GetData();
+        int index = Random.Range(0, datas.Count);
 
-        EquipmentItem item = GameDataStorage.Instance.Equipments[index];
+        EquipmentData item = datas[index];
 
-        InventoryContent.Instance.AddEquipmentItem(item.Name);
+        Inventory.Instance.AddEquipmentItem(item.Name);
     }
 }

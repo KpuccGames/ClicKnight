@@ -38,12 +38,6 @@ public class MaterialInfo : IItem
     }
 
     ////////////////
-    public Sprite GetIcon()
-    {
-        return Data.GetIcon();
-    }
-
-    ////////////////
     public void ApplyConsumeEffect(Character hero)
     {
         switch (Data.ConsumeEffect)

@@ -19,7 +19,7 @@ public class PlayerProfile
 
     public int Health { get; private set; }
     public int BaseDamage { get; private set; }
-    public Dictionary<EquipmentSlot, EquipmentItem> HeroEquipment { get; private set; } = new Dictionary<EquipmentSlot, EquipmentItem>();
+    public Dictionary<EquipmentSlot, EquipmentData> HeroEquipment { get; private set; } = new Dictionary<EquipmentSlot, EquipmentData>();
     public MaterialInfo[] PocketItems { get; private set; } = new MaterialInfo[4];
 
     public int NormalWorldMissionNumber { get; private set; }
@@ -44,7 +44,7 @@ public class PlayerProfile
         EarthWorldMissionNumber = json.GetInt(Constants.EarthWorldMissionNumber);
         DarknessWorldMissionNumber = json.GetInt(Constants.DarknessWorldMissionNumber);
 
-        HeroEquipment = new Dictionary<EquipmentSlot, EquipmentItem>();
+        HeroEquipment = new Dictionary<EquipmentSlot, EquipmentData>();
     }
 
     ///////////////
@@ -52,7 +52,7 @@ public class PlayerProfile
     {
         int damage = BaseDamage;
 
-        foreach (EquipmentItem equipment in HeroEquipment.Values)
+        foreach (EquipmentData equipment in HeroEquipment.Values)
         {
             damage += equipment.AttackBonus;
         }
@@ -65,7 +65,7 @@ public class PlayerProfile
     {
         int health = Health;
 
-        foreach (EquipmentItem equipment in HeroEquipment.Values)
+        foreach (EquipmentData equipment in HeroEquipment.Values)
         {
             health += equipment.HealthBonus;
         }
@@ -74,18 +74,18 @@ public class PlayerProfile
     }
 
     ///////////////
-    public void EquipItem(EquipmentItem item)
+    public void EquipItem(EquipmentData item)
     {
         if (item == null)
             return;
 
-        EquipmentItem equippedItem;
+        EquipmentData equippedItem;
 
         // если на персонаже нет предмета в этом слоте, тогда надеваем предмет
         if (!HeroEquipment.TryGetValue(item.Slot, out equippedItem))
         {
             HeroEquipment.Add(item.Slot, item);
-            InventoryContent.Instance.RemoveItem(item);
+            Inventory.Instance.RemoveItem(item);
 
             if (OnEquipmentChanged != null)
                 OnEquipmentChanged();
@@ -93,8 +93,8 @@ public class PlayerProfile
             return;
         }
 
-        InventoryContent.Instance.AddEquipmentItem(equippedItem);
-        InventoryContent.Instance.RemoveItem(item);
+        Inventory.Instance.AddEquipmentItem(equippedItem);
+        Inventory.Instance.RemoveItem(item);
         HeroEquipment[item.Slot] = item;
 
         if (OnEquipmentChanged != null)
@@ -102,13 +102,13 @@ public class PlayerProfile
     }
 
     ///////////////
-    public void UnequipItem(EquipmentItem item)
+    public void UnequipItem(EquipmentData item)
     {
         if (item == null)
             return;
 
         HeroEquipment.Remove(item.Slot);
-        InventoryContent.Instance.AddEquipmentItem(item);
+        Inventory.Instance.AddEquipmentItem(item);
 
         if (OnEquipmentChanged != null)
             OnEquipmentChanged();
@@ -133,11 +133,11 @@ public class PlayerProfile
                     switch (number)
                     {
                         case 2:
-                            InventoryContent.Instance.AddEquipmentItem("axe");
+                            Inventory.Instance.AddEquipmentItem("axe");
                             break;
 
                         case 3:
-                            InventoryContent.Instance.AddMaterial("ingot", 15);
+                            Inventory.Instance.AddMaterial("ingot", 15);
                             break;
                     }
                 }
@@ -150,7 +150,10 @@ public class PlayerProfile
     ///////////////
     public void AddItemToPocket(MaterialData data)
     {
-        if (!InventoryContent.Instance.TryRemoveMaterial(data, 1))
+        if (IsPocketFull())
+            return;
+
+        if (!Inventory.Instance.TryRemoveMaterial(data, 1))
             return;
 
         for (int i = 0; i < PocketItems.Length; i++)
@@ -174,25 +177,36 @@ public class PlayerProfile
 
         if (!isUsed)
         {
-            InventoryContent.Instance.AddMaterial(PocketItems[pocketNumber].Data);
+            Inventory.Instance.AddMaterial(PocketItems[pocketNumber].Data);
         }
 
         PocketItems[pocketNumber] = null;
     }
 
+    private bool IsPocketFull()
+    {
+        for (int i = 0; i < PocketItems.Length; i++)
+        {
+            if (PocketItems[i] == null)
+                return false;
+        }
+
+        return true;
+    }
+
     //Utils//
 
     ///////////////
-    public void LoadProfile(JsonObject json)
+    public void LoadProfile(JsonObject json, JsonArray baseConfig)
     {
-        InitBaseStats(GameDataStorage.Instance.NewProfileData);
+        InitBaseStats(baseConfig);
 
         // экипировка героя
         JsonArray heroEquipments = json.Get<JsonArray>("hero_equipment");
 
         foreach (JsonObject obj in heroEquipments)
         {
-            EquipmentItem item = GameDataStorage.Instance.GetEquipmentByName(obj.GetString("Name", string.Empty));
+            EquipmentData item = EquipmentsDataStorage.Instance.GetByName(obj.GetString("Name", string.Empty));
 
             HeroEquipment.Add((EquipmentSlot)obj.GetInt("Slot"), item);
         }
@@ -205,7 +219,7 @@ public class PlayerProfile
             if (pocketItems[i] == null)
                 continue;
 
-            MaterialData itemData = GameDataStorage.Instance.GetMaterialByName((string)pocketItems[i]);
+            MaterialData itemData = MaterialsDataStorage.Instance.GetByName((string)pocketItems[i]);
 
             PocketItems[i] = new MaterialInfo(itemData, 1);
         }
@@ -228,7 +242,7 @@ public class PlayerProfile
         // сохраняем снаряжение персонажа
         JsonArray heroEquipmentArray = new JsonArray();
 
-        foreach (KeyValuePair<EquipmentSlot, EquipmentItem> pair in HeroEquipment)
+        foreach (KeyValuePair<EquipmentSlot, EquipmentData> pair in HeroEquipment)
         {
             heroEquipmentArray.Add(pair.Value);
         }

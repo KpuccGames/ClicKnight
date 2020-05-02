@@ -12,7 +12,7 @@ public class MainMenu : MonoBehaviour
     private void Start()
     {
         Input.multiTouchEnabled = false;
-        GameDataStorage.Instance.Init();
+        GameManager.Instance.InitData();
     }
 
     ////////////////

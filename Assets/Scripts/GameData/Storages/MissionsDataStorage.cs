@@ -12,8 +12,9 @@ public enum MissionWorld
     Darkness = 5
 }
 
-public class MissionData
+public class MissionData : IDataStorageObject
 {
+    public string Name { get; private set; }
     public int Number { get; private set; }
     public List<EnemyData> NormalEnemies { get; private set; }
     public List<EnemyData> EliteEnemies { get; private set; }
@@ -24,9 +25,11 @@ public class MissionData
     private int m_ElitePeriod;
 
     ///////////////
-    public MissionData(JsonObject json)
+    public void Init(JsonObject json)
     {
         Number = json.GetInt("number");
+        // TODO добавить названия миссий (надо ли?)
+        Name = $"Mission_{Number}";
         Waves = json.GetInt("waves");
         World = (MissionWorld)json.GetInt("world");
         m_ElitePeriod = json.GetInt("elite_period");
@@ -39,7 +42,7 @@ public class MissionData
 
         foreach (string enemyName in enemiesList)
         {
-            EnemyData enemy = GameDataStorage.Instance.GetEnemyByName(enemyName);
+            EnemyData enemy = EnemiesDataStorage.Instance.GetByName(enemyName);
 
             if (enemy == null)
             {
@@ -101,4 +104,9 @@ public class MissionData
                 return BossEnemies[0];
         }
     }
+}
+
+public class MissionsDataStorage : BaseDataStorage<MissionData, MissionsDataStorage>
+{
+    public MissionsDataStorage() : base("missions") { }
 }

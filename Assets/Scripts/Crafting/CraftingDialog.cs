@@ -32,7 +32,7 @@ public class CraftingDialog : BaseDialog
     ////////////////
     private void Start()
     {
-        foreach (CraftingData recipe in GameDataStorage.Instance.CraftReceipies)
+        foreach (CraftingData recipe in CraftingDataStorage.Instance.GetData())
         {
             CraftRecipeItem item = Instantiate(m_RecipePrefab, m_RecipesRect);
             item.Init(recipe);
@@ -51,17 +51,18 @@ public class CraftingDialog : BaseDialog
         // определяем тип предмета
         if (m_CurrentRecipe.CraftItemType == ItemType.Equipment)
         {
-            craftItem = GameDataStorage.Instance.GetEquipmentByName(m_CurrentRecipe.CraftItemName);
+            EquipmentInfo equip = new EquipmentInfo(EquipmentsDataStorage.Instance.GetByName(m_CurrentRecipe.Name));
+            m_ItemResultIcon.overrideSprite = equip.Data.GetIcon();
+
+            craftItem = equip;
         }
         else
         {
-            MaterialData matData = GameDataStorage.Instance.GetMaterialByName(m_CurrentRecipe.CraftItemName);
+            MaterialData matData = MaterialsDataStorage.Instance.GetByName(m_CurrentRecipe.Name);
+            m_ItemResultIcon.overrideSprite = matData.GetIcon();
 
             craftItem = new MaterialInfo(matData, 0);
         }
-
-        // Отображаем иконку создаваевомого предмета
-        m_ItemResultIcon.overrideSprite = craftItem.GetIcon();
 
         // отображаем ингредиенты для крафта
         UpdateIngredientsView();
@@ -76,29 +77,29 @@ public class CraftingDialog : BaseDialog
         if (m_CurrentRecipe == null)
             return;
 
-        MaterialData ingredient1 = GameDataStorage.Instance.GetMaterialByName(m_CurrentRecipe.Ingredient1);
-        MaterialData ingredient2 = GameDataStorage.Instance.GetMaterialByName(m_CurrentRecipe.Ingredient2);
+        MaterialData ingredient1 = MaterialsDataStorage.Instance.GetByName(m_CurrentRecipe.Ingredient1);
+        MaterialData ingredient2 = MaterialsDataStorage.Instance.GetByName(m_CurrentRecipe.Ingredient2);
 
         // проверяем наличие ингредиентов у игрока
-        int ing1amount = InventoryContent.Instance.GetMaterialAmount(ingredient1);
+        int ing1amount = Inventory.Instance.GetMaterialAmount(ingredient1);
 
         if (ing1amount < m_CurrentRecipe.Ingredient1Amount)
             return;
 
-        int ing2amount = InventoryContent.Instance.GetMaterialAmount(ingredient2);
+        int ing2amount = Inventory.Instance.GetMaterialAmount(ingredient2);
 
         if (ing2amount < m_CurrentRecipe.Ingredient2Amount)
             return;
 
         // тратим ингредиенты
-        InventoryContent.Instance.TryRemoveMaterial(ingredient1, m_CurrentRecipe.Ingredient1Amount);
-        InventoryContent.Instance.TryRemoveMaterial(ingredient2, m_CurrentRecipe.Ingredient2Amount);
+        Inventory.Instance.TryRemoveMaterial(ingredient1, m_CurrentRecipe.Ingredient1Amount);
+        Inventory.Instance.TryRemoveMaterial(ingredient2, m_CurrentRecipe.Ingredient2Amount);
 
         // добавляем изготовленный предмет
         if (m_CurrentRecipe.CraftItemType == ItemType.Equipment)
-            InventoryContent.Instance.AddEquipmentItem(m_CurrentRecipe.CraftItemName);
+            Inventory.Instance.AddEquipmentItem(m_CurrentRecipe.Name);
         else
-            InventoryContent.Instance.AddMaterial(m_CurrentRecipe.CraftItemName);
+            Inventory.Instance.AddMaterial(m_CurrentRecipe.Name);
 
         // обновляем отображение
         UpdateIngredientsView();
@@ -107,8 +108,8 @@ public class CraftingDialog : BaseDialog
     ////////////////
     private void UpdateIngredientsView()
     {
-        MaterialData ingredient1 = GameDataStorage.Instance.GetMaterialByName(m_CurrentRecipe.Ingredient1);
-        MaterialData ingredient2 = GameDataStorage.Instance.GetMaterialByName(m_CurrentRecipe.Ingredient2);
+        MaterialData ingredient1 = MaterialsDataStorage.Instance.GetByName(m_CurrentRecipe.Ingredient1);
+        MaterialData ingredient2 = MaterialsDataStorage.Instance.GetByName(m_CurrentRecipe.Ingredient2);
 
         // если у рецепта 2 ингредиента, то показываем вторую ячейку
         if (ingredient2 != null)
@@ -118,7 +119,7 @@ public class CraftingDialog : BaseDialog
 
             m_Ingredient2Icon.overrideSprite = ingredient2.GetIcon();
 
-            string ingredient2text = string.Format("{0} / {1}", InventoryContent.Instance.GetMaterialAmount(ingredient2), m_CurrentRecipe.Ingredient2Amount);
+            string ingredient2text = string.Format("{0} / {1}", Inventory.Instance.GetMaterialAmount(ingredient2), m_CurrentRecipe.Ingredient2Amount);
             m_Ingredient2Amount.text = ingredient2text;
         }
         else
@@ -129,7 +130,7 @@ public class CraftingDialog : BaseDialog
 
         m_Ingredient1Icon.overrideSprite = ingredient1.GetIcon();
 
-        string ingredient1text = string.Format("{0} / {1}", InventoryContent.Instance.GetMaterialAmount(ingredient1), m_CurrentRecipe.Ingredient1Amount);
+        string ingredient1text = string.Format("{0} / {1}", Inventory.Instance.GetMaterialAmount(ingredient1), m_CurrentRecipe.Ingredient1Amount);
 
         m_Ingredient1Amount.text = ingredient1text;
     }

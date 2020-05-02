@@ -7,7 +7,7 @@ public enum ConsumeEffect
     Heal = 1
 }
 
-public class MaterialData
+public class MaterialData : IDataStorageObject
 {
     public string Name { get; private set; }
     public string Icon { get; private set; }
@@ -15,7 +15,7 @@ public class MaterialData
     public int ConsumeValue { get; private set; }
 
     ////////////////
-    public MaterialData(JsonObject json)
+    public void Init(JsonObject json)
     {
         Name = (string)json["name"];
         Icon = (string)json["icon"];
@@ -28,4 +28,9 @@ public class MaterialData
     {
         return Resources.Load<Sprite>(Icon);
     }
+}
+
+public class MaterialsDataStorage : BaseDataStorage<MaterialData, MaterialsDataStorage>
+{
+    public MaterialsDataStorage() : base("materials") { }
 }

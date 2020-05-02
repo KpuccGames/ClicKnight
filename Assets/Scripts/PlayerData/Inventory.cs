@@ -3,21 +3,21 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-public class InventoryContent
+public class Inventory
 {
-    private static InventoryContent m_Instance;
-    public static InventoryContent Instance
+    private static Inventory m_Instance;
+    public static Inventory Instance
     {
         get
         {
             if (m_Instance == null)
-                m_Instance = new InventoryContent();
+                m_Instance = new Inventory();
 
             return m_Instance;
         }
     }
 
-    public List<EquipmentItem> PlayerEquipments { get; private set; }
+    public List<EquipmentInfo> PlayerEquipments { get; private set; }
     public List<MaterialInfo> PlayerMaterials { get; private set; }
 
     public bool IsInited { get; private set; }
@@ -25,9 +25,9 @@ public class InventoryContent
     public static event Action<IItem> OnInventoryContentChanged;
 
     /////////////////
-    public InventoryContent()
+    public Inventory()
     {
-        PlayerEquipments = new List<EquipmentItem>();
+        PlayerEquipments = new List<EquipmentInfo>();
         PlayerMaterials = new List<MaterialInfo>();
     }
 
@@ -42,16 +42,16 @@ public class InventoryContent
         for (int i = 0; i < equipments.Count; i++)
         {
             string obj = (string)equipments[i];
-            EquipmentItem item = GameDataStorage.Instance.GetEquipmentByName(obj);
+            EquipmentData item = EquipmentsDataStorage.Instance.GetByName(obj);
 
-            PlayerEquipments.Add(item);
+            PlayerEquipments.Add(new EquipmentInfo(item));
         }
 
         JsonArray materials = json.Get<JsonArray>("materials");
 
         foreach (JsonObject item in materials)
         {
-            MaterialData data = GameDataStorage.Instance.GetMaterialByName((string)item["name"]);
+            MaterialData data = MaterialsDataStorage.Instance.GetByName((string)item["name"]);
             int amount = item.GetInt("amount");
 
             PlayerMaterials.Add(new MaterialInfo(data, amount));
@@ -61,7 +61,7 @@ public class InventoryContent
     /////////////////
     public void AddMaterial(string materialName, int amount = 1)
     {
-        MaterialData material = GameDataStorage.Instance.GetMaterialByName(materialName);
+        MaterialData material = MaterialsDataStorage.Instance.GetByName(materialName);
 
         if (material != null)
             AddMaterial(material, amount);
@@ -99,17 +99,19 @@ public class InventoryContent
     /////////////////
     public void AddEquipmentItem(string itemName)
     {
-        EquipmentItem item = GameDataStorage.Instance.GetEquipmentByName(itemName);
+        EquipmentData item = EquipmentsDataStorage.Instance.GetByName(itemName);
 
         if (item != null)
             AddEquipmentItem(item);
     }
 
     /////////////////
-    public void AddEquipmentItem(EquipmentItem item)
+    public void AddEquipmentItem(EquipmentData itemData)
     {
-        if (item != null)
+        if (itemData != null)
         {
+            EquipmentInfo item = new EquipmentInfo(itemData);
+
             PlayerEquipments.Add(item);
 
             //
@@ -165,17 +167,17 @@ public class InventoryContent
     }
 
     /////////////////
-    public void RemoveItem(EquipmentItem itemToRemove)
+    public void RemoveItem(EquipmentData itemToRemove)
     {
-        foreach (EquipmentItem item in PlayerEquipments)
+        foreach (EquipmentInfo item in PlayerEquipments)
         {
-            if (item == itemToRemove)
+            if (item.Data == itemToRemove)
             {
                 PlayerEquipments.Remove(item);
 
-                OnInventoryContentChanged?.Invoke(itemToRemove);
+                OnInventoryContentChanged?.Invoke(item);
 
-                return;
+                break; ;
             }
         }
     }

@@ -17,6 +17,39 @@ public class GameManager
         }
     }
 
+    private readonly IDataStorage[] m_Storages = new IDataStorage[]
+    {
+        MaterialsDataStorage.Instance,
+        EquipmentsDataStorage.Instance,
+        DropsDataStorage.Instance,
+        EnemiesDataStorage.Instance,
+        MissionsDataStorage.Instance,
+        AbilitiesDataStorage.Instance,
+        CraftingDataStorage.Instance
+    };
+
+    private JsonArray m_NewProfileData;
+
+    public void InitData()
+    {
+        GameDataContainer gameDatas = Resources.Load<GameDataContainer>("GameDataContainer");
+
+        for (int i = 0; i < m_Storages.Length; i++)
+        {
+            string storageName = m_Storages[i].GetStorageName();
+
+            foreach (TextAsset asset in gameDatas.m_GameDataFiles)
+            {
+                if (asset.name.Equals(storageName))
+                {
+                    m_Storages[i].Init(Helper.ParseJsonArray(asset.ToString()));
+                }
+            }
+        }
+
+        m_NewProfileData = Helper.ParseJsonArray(gameDatas.m_BaseConfig.ToString());
+    }
+
     /////////////////
     public void StartGame(JsonObject json)
     {
@@ -25,14 +58,14 @@ public class GameManager
         if (json != null)
         {
             JsonObject inventoryContent = json.Get<JsonObject>("inventory");
-            InventoryContent.Instance.Init(inventoryContent);
+            Inventory.Instance.Init(inventoryContent);
 
             JsonObject profile = json.Get<JsonObject>("profile");
-            PlayerProfile.Instance.LoadProfile(profile);
+            PlayerProfile.Instance.LoadProfile(profile, m_NewProfileData);
         }
         else
         {
-            PlayerProfile.Instance.CreateNewProfile(GameDataStorage.Instance.NewProfileData);
+            PlayerProfile.Instance.CreateNewProfile(m_NewProfileData);
         }
         
         SceneManager.LoadScene(SceneName.Home);
@@ -49,19 +82,19 @@ public class GameManager
         JsonObject inventoryContent = new JsonObject();
 
         // сохраняем экипировку
-        List<EquipmentItem> equipments = InventoryContent.Instance.PlayerEquipments;
+        List<EquipmentInfo> equipments = Inventory.Instance.PlayerEquipments;
 
         JsonArray equipmentsArray = new JsonArray();
         
-        foreach (EquipmentItem item in equipments)
+        foreach (EquipmentInfo item in equipments)
         {
-            equipmentsArray.Add(item.Name);
+            equipmentsArray.Add(item.Data.Name);
         }
 
         inventoryContent.Add("equipments", equipmentsArray);
         
         // сохраняем материалы
-        List<MaterialInfo> materials = InventoryContent.Instance.PlayerMaterials;
+        List<MaterialInfo> materials = Inventory.Instance.PlayerMaterials;
 
         JsonArray materialsArray = new JsonArray();
         

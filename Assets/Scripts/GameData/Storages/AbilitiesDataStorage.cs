@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using SimpleJson;
 
-public class AbilityData
+public class AbilityData : IDataStorageObject
 {
     public string Name { get; private set; }
     public float ReactionTime { get; private set; }
     public float Cooldown { get; private set; }
     public int[] Strikes { get; private set; }
 
-    /////////////////
-    public AbilityData(JsonObject json)
+    public void Init(JsonObject json)
     {
         Name = (string)json["name"];
         ReactionTime = json.GetFloat("reaction_time");
@@ -26,4 +25,9 @@ public class AbilityData
             Strikes[i] = Convert.ToInt32(strikes[i]);
         }
     }
+}
+
+public class AbilitiesDataStorage : BaseDataStorage<AbilityData, AbilitiesDataStorage>
+{
+    public AbilitiesDataStorage() : base("abilities") { }
 }

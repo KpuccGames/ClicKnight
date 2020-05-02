@@ -8,4 +8,5 @@ using UnityEngine.UI;
 public class GameDataContainer : ScriptableObject
 {
     public TextAsset[] m_GameDataFiles;
+    public TextAsset m_BaseConfig;
 }
