@@ -30,6 +30,7 @@ public class PlayerProfile
     public int DarknessWorldMissionNumber { get; private set; }
 
     public static event Action OnEquipmentChanged;
+    public static event Action<MaterialInfo, int> OnPocketUpdated;
 
     ///////////////
     public void CreateNewProfile(JsonArray data)
@@ -160,7 +161,10 @@ public class PlayerProfile
         {
             if (PocketItems[i] == null)
             {
-                PocketItems[i] = new MaterialInfo(data, 1);
+                MaterialInfo materialInPocket = new MaterialInfo(data, 1);
+                PocketItems[i] = materialInPocket;
+
+                OnPocketUpdated?.Invoke(materialInPocket, i);
                 break;
             }
         }
@@ -181,6 +185,8 @@ public class PlayerProfile
         }
 
         PocketItems[pocketNumber] = null;
+
+        OnPocketUpdated?.Invoke(null, pocketNumber);
     }
 
     private bool IsPocketFull()

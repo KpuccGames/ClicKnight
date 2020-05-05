@@ -47,4 +47,9 @@ public class MaterialInfo : IItem
                 break;
         }
     }
+
+    public bool IsConsumable()
+    {
+        return Data.ConsumeEffect != ConsumeEffect.None;
+    }
 }

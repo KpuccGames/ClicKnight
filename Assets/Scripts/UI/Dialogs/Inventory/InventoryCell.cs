@@ -2,44 +2,48 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
-public class InventoryCell : MonoBehaviour, IPointerClickHandler
+public class InventoryCell : MonoBehaviour
 {
     public Image m_Icon;
     public TextMeshProUGUI m_AmountText;
     public Button m_CellButton;
 
-    private IItem m_Item;
+    public IItem Item { get; private set; }
 
-    public static event Action<IItem> OnItemCellClicked;
+    public static event Action<InventoryCell> OnItemCellClicked;
+
+    private void OnEnable()
+    {
+        OnItemCellClicked += UpdateCell;
+    }
+
+    private void OnDisable()
+    {
+        OnItemCellClicked -= UpdateCell;
+    }
 
     //////////////
-    public void OnPointerClick(PointerEventData eventData)
+    public void OnClick()
     {
-        OnItemCellClicked?.Invoke(m_Item);
-
-        if (m_Item == null)
-            return;
-
-        m_CellButton.gameObject.SetActive(!m_CellButton.gameObject.activeSelf);
+        OnItemCellClicked?.Invoke(this);
     }
     
     //////////////
     public void OnClickCellButton()
     {
-        if (m_Item == null)
+        if (Item == null)
             return;
 
-        if (m_Item.GetItemType() == ItemType.Material)
+        if (Item.GetItemType() == ItemType.Material)
         {
-            MaterialInfo materialInfo = (MaterialInfo)m_Item;
+            MaterialInfo materialInfo = (MaterialInfo)Item;
 
             PlayerProfile.Instance.AddItemToPocket(materialInfo.Data);
         }
         else
         {
-            EquipmentData equip = ((EquipmentInfo)m_Item).Data;
+            EquipmentData equip = ((EquipmentInfo)Item).Data;
 
             PlayerProfile.Instance.EquipItem(equip);
         }
@@ -50,7 +54,7 @@ public class InventoryCell : MonoBehaviour, IPointerClickHandler
     //////////////
     public void SetItem(IItem item)
     {
-        m_Item = item;
+        Item = item;
 
         if (item == null)
         {
@@ -81,5 +85,12 @@ public class InventoryCell : MonoBehaviour, IPointerClickHandler
     private void SetItemIcon(Sprite icon)
     {
         m_Icon.overrideSprite = icon;
+    }
+
+    private void UpdateCell(InventoryCell cell)
+    {
+        bool needShowButton = cell == this && cell.Item != null;
+
+        m_CellButton.gameObject.SetActive(needShowButton);
     }
 }

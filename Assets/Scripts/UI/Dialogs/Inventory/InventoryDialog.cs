@@ -9,11 +9,14 @@ public class InventoryDialog : BaseDialog
     public HeroEquipmentView m_EquipmentView;
     public TextMeshProUGUI m_ItemStatsText;
 
+    public InventoryPocketItem[] m_Pockets;
+
     ////////////////
     private void OnEnable()
     {
         Inventory.OnInventoryContentChanged += UpdateView;
         InventoryCell.OnItemCellClicked += UpdateSelectedItemInfo;
+        PlayerProfile.OnPocketUpdated += UpdatePocket;
     }
 
     ////////////////
@@ -21,6 +24,7 @@ public class InventoryDialog : BaseDialog
     {
         Inventory.OnInventoryContentChanged -= UpdateView;
         InventoryCell.OnItemCellClicked -= UpdateSelectedItemInfo;
+        PlayerProfile.OnPocketUpdated -= UpdatePocket;
     }
 
     ////////////////
@@ -38,6 +42,15 @@ public class InventoryDialog : BaseDialog
         ShowEquipments();
 
         m_EquipmentView.UpdateEquipmentView();
+
+        // инициализация карманов
+        MaterialInfo[] playerPockets = PlayerProfile.Instance.PocketItems;
+
+        for (int i = 0; i < m_Pockets.Length; i++)
+        {
+            MaterialInfo materialInPocket = playerPockets[i];
+            m_Pockets[i].InitItem(materialInPocket, i);
+        }
     }
 
     ////////////////
@@ -90,9 +103,14 @@ public class InventoryDialog : BaseDialog
     }
 
     ////////////////
-    private void UpdateSelectedItemInfo(IItem item)
+    private void UpdateSelectedItemInfo(InventoryCell cell)
     {
-        m_ItemStatsText.text = UIHelper.GetItemInformationText(item);
+        m_ItemStatsText.text = UIHelper.GetItemInformationText(cell.Item);
+    }
+
+    private void UpdatePocket(MaterialInfo material, int pocketIndex)
+    {
+        m_Pockets[pocketIndex].UpdateItem(material);
     }
 
     /////////////////
