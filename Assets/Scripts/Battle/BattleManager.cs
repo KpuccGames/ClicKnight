@@ -79,6 +79,7 @@ public class BattleManager : MonoBehaviour
     {
         Debug.Log("You lost.");
 
+        GameManager.Instance.SaveGame();
         SceneManager.LoadScene(SceneName.Home);
     }
 
